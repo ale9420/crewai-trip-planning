@@ -1,0 +1,131 @@
+gather_requirements_task:
+  description: >
+    Ask about destination, dates, budget, number of travelers, type of trip (family, romantic, adventure).
+  expected_output: >
+    A list of the user's travel preferences and requirements.
+  agent: user_interaction
+
+identify_interests_task:
+  description: >
+    Inquire about preferred activities (museums, nature, nightlife, sports, gastronomy).
+  expected_output: >
+    A list of the user's interests and preferences.
+  agent: user_interaction
+
+handle_clarification_task:
+  description: >
+    Ask follow-up questions to disambiguate information ("Do you prefer a luxury hotel or something more budget-friendly?").
+  expected_output: >
+    Precise and clear information about the user's preferences.
+  agent: user_interaction
+
+confirm_details_task:
+  description: >
+    Summarize the captured preferences and ask the user for confirmation before passing the information to other agents.
+  expected_output: >
+    A list of the user's travel preferences and requirements.
+  agent: user_interaction
+
+flight_search_task:
+  description: >
+    Consult airline APIs or aggregators (e.g., Skyscanner, Google Flights) to
+    find flight options within the specified dates and budget.
+  expected_output: >
+    A list with maximum 10 flight options, including flight number, departure and arrival times, price,
+    and any other relevant information.
+  agent: travel_searcher
+
+accommodation_search_task:
+  description: >
+    Look for hotels, Airbnbs, hostels according to preferences (accommodation type, budget, location).
+  expected_output: >
+    A list with maximum 10 accommodation options, including name, address, price, and any other relevant information.
+  agent: travel_searcher
+
+destination_search_task:
+  description: >
+    Obtain general information about the destination (weather during chosen dates, special events, visa requirements, safe areas).
+  expected_output: >
+    A summary of the destination, including weather during chosen dates, special events, visa requirements, safe areas.
+  agent: travel_searcher
+
+attraction_search_task:
+  description: >
+    Search for points of interest, museums, parks, and popular activities.
+  expected_output: >
+    A list of maximum 10 attractions, including name, description, and any other relevant information.
+  agent: travel_searcher
+
+dinner_search_task:
+  description: >
+    Identify highly-rated restaurants that match the user's tastes.
+  expected_output: >
+    A list of maximum 10 dinner options, including name, address, price, and any other relevant information.
+  agent: travel_searcher
+
+structure_itinerary_task:
+  description: >
+    Organize activities day by day, considering travel times and opening/closing hours.
+  expected_output: >
+    A structured itinerary with daily activities, accommodation, and transportation.
+  agent: itinerary_planner
+
+optimize_routes_task:
+  description: >
+    Optimize the travel routes to minimize travel time and maximize efficiency.
+  expected_output: >
+    A list of optimized routes, including the best way to get from one place to another.
+  agent: itinerary_planner
+
+integrate_preferences_task:
+  description: >
+    Ensure that chosen activities and places align with the user's interests
+    (e.g., if they like history, prioritize museums).
+  expected_output: >
+    A structured itinerary with daily activities, accommodation, and transportation prioritizing the user's preferences.
+  agent: itinerary_planner
+
+consider_budget_task:
+  description: >
+    Ensure that the itinerary stays within the user's budget.
+  expected_output: >
+    A structured itinerary with daily activities, accommodation, and transportation within the user's budget.
+  agent: itinerary_planner
+
+recommend_experiences_task:
+  description: >
+    Suggest hidden gems, special local events, or less touristy but authentic activities..
+  expected_output: >
+    A list of recommended experiences, including name, description, and any other relevant information.
+  agent: recommendation_engine
+
+offer_alternative_options_task:
+  description: >
+    Propose different options if the initial ones don't convince the user (e.g., if a restaurant isn't
+    available, suggest a similar one).
+  expected_output: >
+    A list of alternative options, including name, description, and any other relevant information.
+  agent: recommendation_engine
+
+post_planning_advice_task:
+  description: >
+    Provide advice on how to make the most of the trip (e.g., what to pack, what to avoid, etc.).
+  expected_output: >
+    A list of advice, including name, description, and any other relevant information.
+  agent: recommendation_engine
+
+evaluate_match_task:
+  description: >
+    Ensure that recommendations are highly relevant to the traveler's profile.
+  expected_output: >
+    structured assessment of how well a particular recommendation aligns with the user's explicit and
+    inferred preferences, as well as the overall trip context. (Quantitative, Qualitative but optional, detailed justification,
+    contributing factors, etc.)
+  agent: user_interaction
+
+
+
+
+
+
+
