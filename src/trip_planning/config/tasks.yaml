@@ -1,127 +1,700 @@
-gather_requirements_task:
-  description: >
-    Ask about destination, dates, budget, number of travelers, type of trip (family, romantic, adventure).
-  expected_output: >
-    A list of the user's travel preferences and requirements.
-  agent: user_interaction
+# Research Phase
 
-identify_interests_task:
+destination_search_task:
   description: >
-    Inquire about preferred activities (museums, nature, nightlife, sports, gastronomy).
-  expected_output: >
-    A list of the user's interests and preferences.
-  agent: user_interaction
+    Consider the following specific travel preferences:
 
-handle_clarification_task:
-  description: >
-    Ask follow-up questions to disambiguate information ("Do you prefer a luxury hotel or something more budget-friendly?").
-  expected_output: >
-    Precise and clear information about the user's preferences.
-  agent: user_interaction
+    Origin: {origin}
+    Destination: {destination}
+    Start Date: {start_date}
+    End Date: {end_date}
+    Budget: {budget}
+    Travelers: {travelers}
+    Trip Type: {trip_type}
+    Accommodation: {accomodation}
+    Flights: {flights}
 
-confirm_details_task:
-  description: >
-    Summarize the captured preferences and ask the user for confirmation before passing the information to other agents.
+    Conduct an in-depth investigation of the selected destination to provide the traveler with all essential and value-adding information for trip planning and decision-making.
+    This includes not only basic facts, but also actionable insights, local nuances, and up-to-date considerations.
+    The research should be tailored to the user's travel dates, preferences, and any special requirements already gathered.
+    The output should empower both the planning agents and the user to make informed, safe, and enjoyable choices.
   expected_output: >
-    A list of the user's travel preferences and requirements.
-  agent: user_interaction
+    **DESTINATION INTELLIGENCE REPORT**
+
+    1. **Weather & Climate:**  
+       - Typical weather conditions (temperature, precipitation, humidity) for the specified travel dates.
+       - Seasonal considerations (e.g., monsoon, hurricane, dry/wet season, pollen/allergy alerts).
+       - Packing tips based on expected weather.
+
+    2. **Events & Festivals:**  
+       - Major public holidays, festivals, or special events during the travel period.
+       - Impact on crowds, prices, and availability.
+       - Unique local experiences or must-see events.
+
+    3. **Entry & Visa Requirements:**  
+       - Visa requirements for the traveler's nationality.
+       - Passport validity, e-visa or on-arrival options, and any recent changes.
+       - Health requirements (vaccinations, COVID-19 rules, travel insurance mandates).
+
+    4. **Safety & Security:**  
+       - General safety level (crime, scams, political stability).
+       - Areas to avoid, local laws, and emergency contacts.
+       - Health and medical care availability, including pharmacies and hospitals.
+
+    5. **Cultural Norms & Etiquette:**  
+       - Key customs, dress codes, and social etiquette.
+       - Tipping practices, language basics, and local dos/don’ts.
+       - Notable cultural sensitivities or taboos.
+
+    6. **Best Times to Visit Attractions:**  
+       - Opening hours and best visiting times for major attractions.
+       - Recommendations for avoiding crowds or maximizing experience.
+
+    7. **Local Transportation:**  
+       - Overview of public transit, taxis, ride-sharing, and walking safety.
+       - Accessibility for travelers with special needs.
+
+    8. **Money & Connectivity:**  
+       - Currency, payment methods, and ATM availability.
+       - Internet access, SIM cards, and mobile coverage.
+
+    9. **Insider Tips:**  
+       - Local secrets, hidden gems, or off-the-beaten-path suggestions.
+       - Common tourist mistakes to avoid.
+
+    10. **Recent Developments:**  
+        - Any recent news, travel advisories, or disruptions relevant to the travel period.
+
+    **FORMAT:**  
+    Present the information in a clear, organized, and visually scannable format (bulleted lists, tables, or sections as appropriate).  
+    Highlight any critical warnings or must-know facts.  
+    Tailor recommendations to the user's interests and requirements if available.
+  agent: travel_searcher
 
 flight_search_task:
   description: >
-    Consult airline APIs or aggregators (e.g., Skyscanner, Google Flights) to
-    find flight options within the specified dates and budget.
+    Conduct a comprehensive flight search using multiple airline APIs, aggregators (Skyscanner, Google Flights, Kayak), 
+    and direct airline websites to find optimal flight options that match the user's travel requirements.
+    
+    **SEARCH CRITERIA:**
+    - Origin: {origin}
+    - Destination: {destination}
+    - Departure Date: {start_date}
+    - Return Date: {end_date} (if round-trip)
+    - Budget: {budget}
+    - Number of Travelers: {travelers}
+    - Trip Type: {trip_type}
+    - Flight Preferences: {flights}
+    
+    **SEARCH STRATEGY:**
+    1. **Primary Search:** Direct flights and 1-stop connections within budget
+    2. **Alternative Routes:** Consider nearby airports for better pricing
+    3. **Flexible Dates:** Check +/- 1-3 days for better rates if dates are flexible
+    4. **Multiple Airlines:** Include major carriers, budget airlines, and regional options
+    5. **Booking Classes:** Economy, Premium Economy, Business (if within budget)
+    6. **Special Considerations:** 
+       - Accessibility features for travelers with disabilities
+       - Family-friendly options (seat selection, meal options)
+       - Business traveler amenities (WiFi, power outlets, lounge access)
+       - Baggage allowances and fees
+       - Cancellation/change policies
+    
+    **EVALUATION CRITERIA:**
+    - Price competitiveness and value for money
+    - Travel time and layover efficiency
+    - Departure/arrival times (avoiding red-eyes unless requested)
+    - Airline reputation and safety record
+    - On-time performance and reliability
+    - Baggage policies and hidden fees
+    - Seat comfort and legroom
+    - In-flight amenities (WiFi, entertainment, meals)
+    - Loyalty program benefits (if applicable)
+    
+    **SPECIAL REQUIREMENTS:**
+    - Check visa requirements for layover countries
+    - Verify COVID-19 testing/vaccination requirements
+    - Consider travel insurance recommendations
+    - Check for any travel advisories or restrictions
+    
   expected_output: >
-    A list with maximum 10 flight options, including flight number, departure and arrival times, price,
-    and any other relevant information.
+    **FLIGHT SEARCH RESULTS**
+    
+    **SUMMARY:**
+    - Total options found: [number]
+    - Price range: [lowest] - [highest] [currency]
+    - Best value options: [highlight top 3]
+    
+    **DETAILED OPTIONS (Maximum 10):**
+    
+    For each flight option, provide:
+    
+    1. **Flight Details:**
+       - Airline(s) and flight numbers
+       - Departure/arrival times (local time)
+       - Total travel time
+       - Number of stops and layover details
+       - Aircraft type and configuration
+    
+    2. **Pricing Information:**
+       - Total price per person
+       - Breakdown: base fare + taxes + fees
+       - Baggage allowance and fees
+       - Seat selection costs
+       - Cancellation/change fees
+    
+    3. **Travel Experience:**
+       - Cabin class and seat configuration
+       - In-flight amenities (WiFi, entertainment, meals)
+       - On-time performance statistics
+       - Customer satisfaction ratings
+    
+    4. **Practical Considerations:**
+       - Airport transfer times and costs
+       - Visa requirements for layovers
+       - COVID-19 requirements
+       - Travel insurance recommendations
+    
+    5. **Booking Information:**
+       - Booking class and fare rules
+       - Loyalty program earning potential
+       - Best booking channels (direct vs. aggregator)
+       - Recommended booking timing
+    
+    **RECOMMENDATIONS:**
+    - Top 3 value-for-money options
+    - Best option for families with children
+    - Best option for business travelers
+    - Best option for budget-conscious travelers
+    - Alternative airports to consider
+    - Flexible date recommendations for better pricing
+    
+    **IMPORTANT NOTES:**
+    - Highlight any seasonal price variations
+    - Note any upcoming fare sales or promotions
+    - Include any travel advisories or restrictions
+    - Provide booking tips and best practices
+    
+    **FORMAT:** Present in a clear, scannable format with tables, bullet points, and highlighted key information.
   agent: travel_searcher
 
 accommodation_search_task:
   description: >
-    Look for hotels, Airbnbs, hostels according to preferences (accommodation type, budget, location).
+    Conduct a comprehensive accommodation search using multiple booking platforms (Booking.com, Expedia, Airbnb, Hotels.com, 
+    Hostelworld, VRBO) to find optimal lodging options that match the user's travel requirements and preferences.
+    
+    **SEARCH CRITERIA:**
+    - Destination: {destination}
+    - Check-in Date: {start_date}
+    - Check-out Date: {end_date}
+    - Budget: {budget}
+    - Number of Travelers: {travelers}
+    - Trip Type: {trip_type}
+    - Accommodation Preferences: {accomodation}
+    
+    **SEARCH STRATEGY:**
+    1. **Primary Search:** Hotels, resorts, and traditional accommodations within budget
+    2. **Alternative Options:** Vacation rentals, hostels, boutique hotels, and unique stays
+    3. **Location Analysis:** Proximity to attractions, public transport, and safety considerations
+    4. **Multiple Booking Channels:** Direct booking, OTA platforms, and property management companies
+    5. **Accommodation Types:** 
+       - Luxury hotels and resorts
+       - Mid-range hotels and business hotels
+       - Budget hotels and hostels
+       - Vacation rentals (apartments, houses, villas)
+       - Boutique hotels and unique accommodations
+       - All-inclusive resorts (if applicable)
+    6. **Special Considerations:**
+       - Accessibility features for travelers with disabilities
+       - Family-friendly amenities (cribs, kids' clubs, connecting rooms)
+       - Business traveler needs (work spaces, meeting rooms, business centers)
+       - Pet-friendly options (if applicable)
+       - Long-term stay discounts
+       - Group booking benefits
+    
+    **EVALUATION CRITERIA:**
+    - Price competitiveness and value for money
+    - Location quality (safety, convenience, proximity to attractions)
+    - Guest ratings and reviews (minimum 4.0+ rating preferred)
+    - Cleanliness and maintenance standards
+    - Staff friendliness and service quality
+    - Amenities and facilities quality
+    - Cancellation and booking flexibility
+    - Security and safety features
+    - Environmental sustainability practices
+    - Cultural authenticity and local experience
+    
+    **AMENITIES ANALYSIS:**
+    - **Essential:** WiFi, air conditioning/heating, private bathroom, clean bedding
+    - **Comfort:** Pool, gym, spa, restaurant, room service, concierge
+    - **Convenience:** Airport shuttle, parking, laundry, kitchen facilities
+    - **Safety:** 24/7 front desk, security cameras, safe deposit box
+    - **Accessibility:** Elevator, wheelchair access, accessible bathrooms
+    - **Family:** Cribs, kids' activities, family rooms, playground
+    - **Business:** Work desk, meeting rooms, business center, printing
+    
+    **LOCATION ASSESSMENT:**
+    - Distance to major attractions and public transport
+    - Neighborhood safety and walkability
+    - Proximity to restaurants, shops, and services
+    - Noise levels and environmental factors
+    - Parking availability and costs
+    - Accessibility for travelers with mobility issues
+    
+    **SPECIAL REQUIREMENTS:**
+    - Check for any seasonal pricing variations
+    - Verify COVID-19 policies and cleaning protocols
+    - Consider travel insurance recommendations
+    - Check for any local regulations or restrictions
+    - Verify booking policies and payment methods
+    
   expected_output: >
-    A list with maximum 10 accommodation options, including name, address, price, and any other relevant information.
+    **ACCOMMODATION SEARCH RESULTS**
+    
+    **SUMMARY:**
+    - Total options found: [number]
+    - Price range: [lowest] - [highest] [currency] per night
+    - Best value options: [highlight top 3]
+    - Location highlights: [key areas and neighborhoods]
+    
+    **DETAILED OPTIONS (Maximum 10):**
+    
+    For each accommodation option, provide:
+    
+    1. **Basic Information:**
+       - Property name and type (hotel, resort, vacation rental, hostel)
+       - Star rating and guest score
+       - Address and neighborhood description
+       - Distance to key attractions and transport
+    
+    2. **Pricing & Booking:**
+       - Total price for stay (including taxes and fees)
+       - Price breakdown: base rate + taxes + resort fees
+       - Cancellation policy and flexibility
+       - Payment methods and deposit requirements
+       - Best booking channels and timing
+    
+    3. **Room & Amenities:**
+       - Room types available and configurations
+       - Bed sizes and sleeping arrangements
+       - Private vs. shared bathroom
+       - Key amenities (WiFi, AC, TV, minibar, etc.)
+       - Special features (balcony, view, kitchen, etc.)
+    
+    4. **Property Features:**
+       - On-site facilities (pool, gym, spa, restaurant)
+       - Services offered (concierge, room service, laundry)
+       - Safety and security features
+       - Accessibility accommodations
+       - Environmental initiatives
+    
+    5. **Guest Experience:**
+       - Recent guest reviews and ratings
+       - Staff friendliness and service quality
+       - Cleanliness and maintenance standards
+       - Noise levels and atmosphere
+       - Cultural authenticity and local experience
+    
+    6. **Practical Information:**
+       - Check-in/check-out times
+       - Airport transfer options and costs
+       - Parking availability and fees
+       - Pet policies (if applicable)
+       - COVID-19 protocols and cleaning standards
+    
+    **RECOMMENDATIONS:**
+    - Top 3 value-for-money options
+    - Best option for families with children
+    - Best option for business travelers
+    - Best option for budget-conscious travelers
+    - Best option for luxury seekers
+    - Best option for cultural immersion
+    - Alternative neighborhoods to consider
+    
+    **LOCATION INSIGHTS:**
+    - Neighborhood safety ratings
+    - Proximity to attractions and transport
+    - Local dining and shopping options
+    - Cultural and entertainment districts
+    - Transportation hub accessibility
+    
+    **IMPORTANT NOTES:**
+    - Highlight any seasonal price variations
+    - Note any upcoming events that may affect availability
+    - Include any travel advisories or restrictions
+    - Provide booking tips and best practices
+    - Mention any loyalty program benefits
+    - Note any special packages or promotions
+    
+    **FORMAT:** Present in a clear, scannable format with tables, bullet points, and highlighted key information.
+    Include photos and maps when available to help visualize the options.
   agent: travel_searcher
 
-destination_search_task:
+transportation_search_task:
   description: >
-    Obtain general information about the destination (weather during chosen dates, special events, visa requirements, safe areas).
+    Conduct a comprehensive local transportation analysis using multiple sources (Google Maps, local transit websites, 
+    ride-sharing apps, car rental platforms) to find optimal transportation options for getting around the destination.
+    
+    **SEARCH CRITERIA:**
+    - Destination: {destination}
+    - Travel Dates: {start_date} to {end_date}
+    - Budget: {budget}
+    - Number of Travelers: {travelers}
+    - Trip Type: {trip_type}
+    - Accessibility Requirements: [from user preferences]
+    - Mobility Preferences: [walking, cycling, driving comfort level]
+    
+    **SEARCH STRATEGY:**
+    1. **Public Transportation Analysis:**
+       - Metro/subway systems, buses, trams, and light rail
+       - Regional trains and intercity connections
+       - Airport transfers and shuttle services
+       - Tourist-specific transportation passes and cards
+       - Night transportation options and schedules
+    
+    2. **Private Transportation Options:**
+       - Car rental services (international and local companies)
+       - Ride-sharing services (Uber, Lyft, local equivalents)
+       - Taxi services and private drivers
+       - Bicycle rentals and bike-sharing programs
+       - Scooter and motorcycle rentals (where applicable)
+    
+    3. **Walking and Cycling Routes:**
+       - Pedestrian-friendly areas and walking tours
+       - Cycling infrastructure and bike lanes
+       - Safety considerations for walking/cycling
+       - Distance analysis for walkable destinations
+    
+    4. **Specialized Transportation:**
+       - Airport transfers and shuttle services
+       - Hotel shuttle services
+       - Tourist bus services and hop-on-hop-off options
+       - Water transportation (ferries, boats, water taxis)
+       - Cable cars, funiculars, and unique transport options
+    
+    5. **Accessibility Considerations:**
+       - Wheelchair-accessible transportation options
+       - Elevator and escalator availability at stations
+       - Audio announcements and visual displays
+       - Assistance services for travelers with disabilities
+       - Accessible taxi services
+    
+    **EVALUATION CRITERIA:**
+    - Cost-effectiveness and value for money
+    - Convenience and frequency of service
+    - Safety and reliability ratings
+    - Coverage area and connectivity
+    - Operating hours and schedule reliability
+    - Crowding levels and comfort
+    - Environmental impact and sustainability
+    - Cultural authenticity and local experience
+    - Language barriers and ease of use
+    - Payment methods and ticketing systems
+    
+    **COST ANALYSIS:**
+    - **Public Transit:** Single fares, day passes, weekly/monthly passes
+    - **Ride-sharing:** Base fares, surge pricing, tip expectations
+    - **Car Rental:** Daily rates, insurance, fuel, parking costs
+    - **Taxis:** Metered rates, airport surcharges, tip culture
+    - **Tourist Passes:** Multi-attraction transportation passes
+    - **Walking/Cycling:** Free or minimal costs
+    
+    **SAFETY ASSESSMENT:**
+    - Crime rates in transportation areas
+    - Road safety statistics and driving conditions
+    - Public transit safety during different hours
+    - Scam awareness and common tourist traps
+    - Emergency contact information
+    - Insurance requirements and recommendations
+    
+    **ACCESSIBILITY FEATURES:**
+    - Wheelchair accessibility on all transport modes
+    - Audio and visual announcements
+    - Assistance services and staff availability
+    - Elevator and escalator maintenance
+    - Accessible taxi services
+    - Service animal policies
+    
+    **SPECIAL REQUIREMENTS:**
+    - Check for any seasonal transportation changes
+    - Verify COVID-19 protocols and mask requirements
+    - Consider travel insurance for transportation
+    - Check for any local regulations or restrictions
+    - Verify payment methods and mobile app requirements
+    
   expected_output: >
-    A summary of the destination, including weather during chosen dates, special events, visa requirements, safe areas.
+    **TRANSPORTATION ANALYSIS REPORT**
+    
+    **SUMMARY:**
+    - Primary transportation hubs: [key stations, airports, terminals]
+    - Cost range: [lowest] - [highest] [currency] per day
+    - Best value options: [highlight top 3]
+    - Coverage areas: [main districts and neighborhoods served]
+    
+    **DETAILED TRANSPORTATION OPTIONS:**
+    
+    **1. PUBLIC TRANSPORTATION:**
+    
+    **Metro/Subway System:**
+    - Network coverage and key stations
+    - Operating hours and frequency
+    - Fare structure and payment methods
+    - Accessibility features and facilities
+    - Peak vs. off-peak service differences
+    - Tourist-friendly features (English signage, etc.)
+    
+    **Bus Services:**
+    - Route coverage and key destinations
+    - Frequency and reliability
+    - Fare structure and payment options
+    - Night bus services and schedules
+    - Accessibility features
+    
+    **Regional/Intercity Transport:**
+    - Train connections to nearby cities
+    - Airport express services
+    - Tourist shuttle services
+    - Booking requirements and advance purchase options
+    
+    **2. PRIVATE TRANSPORTATION:**
+    
+    **Car Rental Services:**
+    - Major rental companies and local options
+    - Vehicle types and availability
+    - Pricing structure (daily rates, insurance, fuel)
+    - Driving requirements (license, age, experience)
+    - Parking availability and costs
+    - Fuel costs and efficiency considerations
+    - GPS and navigation options
+    
+    **Ride-Sharing Services:**
+    - Available platforms (Uber, Lyft, local equivalents)
+    - Coverage areas and availability
+    - Pricing structure and surge pricing patterns
+    - Safety features and driver verification
+    - Payment methods and tipping culture
+    - Language support and communication options
+    
+    **Taxi Services:**
+    - Official taxi companies and services
+    - Metered vs. fixed pricing
+    - Airport transfer services
+    - Safety and reliability ratings
+    - Tipping expectations and cultural norms
+    - Booking apps and phone numbers
+    
+    **3. ALTERNATIVE TRANSPORTATION:**
+    
+    **Walking and Cycling:**
+    - Walkable areas and pedestrian-friendly zones
+    - Cycling infrastructure and bike lanes
+    - Bike rental services and costs
+    - Safety considerations and recommended routes
+    - Weather impact on walking/cycling
+    
+    **Water Transportation:**
+    - Ferry services and water taxis
+    - Tourist boat services
+    - Operating schedules and costs
+    - Weather-dependent service changes
+    
+    **Unique Transport Options:**
+    - Cable cars, funiculars, and gondolas
+    - Tourist buses and hop-on-hop-off services
+    - Horse-drawn carriages and traditional transport
+    - Electric scooters and micro-mobility options
+    
+    **4. TOURIST-SPECIFIC OPTIONS:**
+    
+    **Transportation Passes:**
+    - Tourist cards and multi-day passes
+    - Museum and attraction combination passes
+    - Airport transfer packages
+    - Group discounts and family packages
+    
+    **Guided Transportation:**
+    - Airport transfer services
+    - Hotel shuttle services
+    - Guided tour transportation
+    - Private driver services
+    
+    **RECOMMENDATIONS:**
+    - Best option for budget-conscious travelers
+    - Best option for families with children
+    - Best option for travelers with accessibility needs
+    - Best option for business travelers
+    - Best option for cultural immersion
+    - Best option for maximum flexibility
+    - Combination strategies for optimal experience
+    
+    **COST COMPARISON:**
+    - Daily transportation budget estimates
+    - Weekly/monthly pass value analysis
+    - Car rental vs. public transit cost comparison
+    - Tourist pass value propositions
+    - Hidden costs and additional fees
+    
+    **SAFETY AND PRACTICAL TIPS:**
+    - Peak hours to avoid
+    - Safe areas and routes
+    - Emergency contact information
+    - Common scams and how to avoid them
+    - Cultural transportation etiquette
+    - Weather considerations and backup plans
+    
+    **ACCESSIBILITY INFORMATION:**
+    - Wheelchair-accessible routes and stations
+    - Audio and visual assistance features
+    - Service animal policies
+    - Assistance services contact information
+    - Accessible taxi and private driver services
+    
+    **IMPORTANT NOTES:**
+    - Seasonal transportation changes
+    - Holiday and weekend schedule modifications
+    - Weather impact on transportation options
+    - Language barriers and communication tips
+    - Mobile app recommendations for navigation
+    - Payment method preferences and requirements
+    
+    **FORMAT:** Present in a clear, scannable format with tables, bullet points, and highlighted key information.
+    Include maps and route visualizations when available to help users understand the transportation network.
   agent: travel_searcher
 
 attraction_search_task:
   description: >
-    Search for points of interest, museums, parks, and popular activities.
+    Search for points of interest, museums, parks, and popular activities with opening hours and accessibility info.
   expected_output: >
-    A list of maximum 10 attractions, including name, description, and any other relevant information.
+    A list of maximum 15 attractions, including name, description, opening hours, accessibility features,
+    and any other relevant information.
   agent: travel_searcher
 
-dinner_search_task:
+dining_search_task:
   description: >
-    Identify highly-rated restaurants that match the user's tastes.
+    Identify highly-rated restaurants and dining options that match the users tastes, dietary restrictions, and budget.
   expected_output: >
-    A list of maximum 10 dinner options, including name, address, price, and any other relevant information.
+    A list of maximum 15options, including name, address, price range, cuisine type, dietary accommodations,
+    and any other relevant information.
   agent: travel_searcher
 
+# Budget Management Phase
+budget_analysis_task:
+  description: >
+    Analyze all collected options against the user's budget constraints and identify cost optimization opportunities.
+  expected_output: >
+    A budget breakdown showing estimated costs for each category and recommendations for cost optimization.
+  agent: budget_manager
+
+cost_optimization_task:
+  description: >
+    Suggest budget-friendly alternatives and value-maximizing strategies while maintaining quality.
+  expected_output: >
+    A list of cost optimization strategies and alternative options that maintain quality within budget.
+  agent: budget_manager
+
+# Planning Phase
 structure_itinerary_task:
   description: >
-    Organize activities day by day, considering travel times and opening/closing hours.
+    Organize activities day by day, considering travel times, opening/closing hours, and logical flow.
   expected_output: >
-    A structured itinerary with daily activities, accommodation, and transportation.
+    A structured day-by-day itinerary with activities, accommodation, and transportation.
   agent: itinerary_planner
 
 optimize_routes_task:
   description: >
-    Optimize the travel routes to minimize travel time and maximize efficiency.
+    Optimize the travel routes to minimize travel time, maximize efficiency, and reduce costs.
   expected_output: >
-    A list of optimized routes, including the best way to get from one place to another.
+    A list of optimized routes with detailed transportation plans and timing.
   agent: itinerary_planner
 
 integrate_preferences_task:
   description: >
-    Ensure that chosen activities and places align with the user's interests
-    (e.g., if they like history, prioritize museums).
+    Ensure that chosen activities and places align with the user's interests and accessibility needs.
   expected_output: >
-    A structured itinerary with daily activities, accommodation, and transportation prioritizing the user's preferences.
+    A personalized itinerary that prioritizes user preferences and accommodates all special needs.
   agent: itinerary_planner
 
-consider_budget_task:
+create_contingency_plans_task:
   description: >
-    Ensure that the itinerary stays within the user's budget.
+    Develop backup plans for weather-dependent activities, attraction closures, and other potential disruptions.
   expected_output: >
-    A structured itinerary with daily activities, accommodation, and transportation within the user's budget.
+    A set of contingency plans for various scenarios that could affect the itinerary.
   agent: itinerary_planner
 
-recommend_experiences_task:
-  description: >
-    Suggest hidden gems, special local events, or less touristy but authentic activities..
-  expected_output: >
-    A list of recommended experiences, including name, description, and any other relevant information.
-  agent: recommendation_engine
+# Enhancement Phase
+# recommend_experiences_task:
+#   description: >
+#     Suggest hidden gems, special local events, or less touristy but authentic activities that align with user interests.
+#   expected_output: >
+#     A list of unique experiences and local recommendations with detailed descriptions and value propositions.
+#   agent: recommendation_engine
 
-offer_alternative_options_task:
-  description: >
-    Propose different options if the initial ones don't convince the user (e.g., if a restaurant isn't
-    available, suggest a similar one).
-  expected_output: >
-    A list of alternative options, including name, description, and any other relevant information.
-  agent: recommendation_engine
+# offer_alternative_options_task:
+#   description: >
+#     Propose different options if the initial ones don't convince the user or if better alternatives are found.
+#   expected_output: >
+#     A list of alternative options with clear comparisons to help the user make informed decisions.
+#   agent: recommendation_engine
 
-post_planning_advice_task:
-  description: >
-    Provide advice on how to make the most of the trip (e.g., what to pack, what to avoid, etc.).
-  expected_output: >
-    A list of advice, including name, description, and any other relevant information.
-  agent: recommendation_engine
+# cultural_immersion_task:
+#   description: >
+#     Suggest cultural experiences, local customs to respect, and ways to connect with local culture.
+#   expected_output: >
+#     A list of cultural experiences and etiquette guidelines to enhance the travel experience.
+#   agent: recommendation_engine
 
-evaluate_match_task:
+# Quality Assurance Phase
+validate_itinerary_task:
   description: >
-    Ensure that recommendations are highly relevant to the traveler's profile.
+    Review the complete itinerary for feasibility, completeness, and alignment with user requirements.
+  context:
+    - integrate_preferences_task
+    - create_contingency_plans_task
   expected_output: >
-    structured assessment of how well a particular recommendation aligns with the user's explicit and
-    inferred preferences, as well as the overall trip context. (Quantitative, Qualitative but optional, detailed justification,
-    contributing factors, etc.)
-  agent: user_interaction
+    A validation report identifying any issues, gaps, or improvements needed in the itinerary.
+  agent: quality_assurance
+
+test_logistics_task:
+  description: >
+    Verify that all logistics are feasible (travel times, opening hours, booking requirements, etc.).
+  context:
+    - integrate_preferences_task
+    - create_contingency_plans_task
+  expected_output: >
+    A logistics verification report confirming all arrangements are practical and bookable.
+  agent: quality_assurance
+
+budget_final_check_task:
+  description: >
+    Perform final budget verification to ensure the complete trip stays within budget constraints.
+  context:
+    - integrate_preferences_task
+    - create_contingency_plans_task
+  expected_output: >
+    A final budget summary with total estimated costs and confirmation of budget compliance.
+  agent: budget_manager
+
+# Final Delivery Phase
+# post_planning_advice_task:
+#   description: >
+#     Provide comprehensive advice on packing, preparation, local customs, safety tips, and making the most of the trip.
+#   expected_output: >
+#     A comprehensive travel preparation guide including packing lists, cultural tips, and practical advice.
+#   agent: recommendation_engine
+
+# create_travel_document_task:
+#   description: >
+#     Compile all information into a comprehensive, well-organized travel document for the user.
+#   expected_output: >
+#     A complete travel document including itinerary, reservations, contact information, and all relevant details.
+#   agent: quality_assurance
+
+# evaluate_match_task:
+#   description: >
+#     Ensure that the final recommendations are highly relevant to the traveler's profile and provide satisfaction metrics.
+#   expected_output: >
+#     A structured assessment of how well the final plan aligns with user preferences, with satisfaction predictions
+#     and areas for potential improvement.
+#   agent: user_interaction
 
 
 

@@ -35,9 +35,21 @@ To kickstart your crew of AI agents and begin task execution, run this from the 
 $ crewai run
 ```
 
-This command initializes the trip-planning Crew, assembling the agents and assigning them tasks as defined in your configuration.
+This command launches a Gradio web interface where you can interact with the trip-planning crew through a chat interface. The interface will open in your default browser.
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+Alternatively, you can run the project directly with Python:
+
+```bash
+$ python -m src.trip_planning.main
+```
+
+The Gradio interface provides a conversational way to interact with the AI agents, allowing you to:
+- Plan trips through natural conversation
+- Get personalized travel recommendations
+- Receive detailed itineraries and budget analysis
+- Ask follow-up questions and get clarifications
+
+This example creates a comprehensive trip planning assistant that can help you plan your next adventure!
 
 ## Understanding Your Crew
 

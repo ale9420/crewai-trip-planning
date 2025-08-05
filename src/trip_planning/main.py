@@ -1,10 +1,16 @@
 #!/usr/bin/env python
 import sys
 import warnings
+import gradio as gr
+import os
+from dotenv import load_dotenv
 
 from datetime import datetime
 
 from trip_planning.crew import TripPlanning
+
+# Load environment variables
+load_dotenv()
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
@@ -13,20 +19,76 @@ warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 # Replace with inputs you want to test with, it will automatically
 # interpolate any tasks and agents information
 
-def run():
+def respond(message, history):
     """
-    Run the crew.
+    Handle chat messages and return crew response.
     """
+    if not message.strip():
+        return "", history
+    
+    # Check if OpenAI API key is set
+    if not os.getenv("OPENAI_API_KEY"):
+        error_msg = "❌ **Error**: OpenAI API key not found. Please set your OPENAI_API_KEY in the .env file."
+        history = history + [
+            {"role": "user", "content": message},
+            {"role": "assistant", "content": error_msg}
+        ]
+        return "", history
+    
+    # Convert Gradio history format to the format expected by crewAI
+    # Gradio history is a list of tuples (user_msg, assistant_msg)
+    # We need to convert it to a list of dicts with role and content
+    crew_history = []
+    for user_msg, assistant_msg in history:
+        if user_msg:
+            crew_history.append({"role": "user", "content": user_msg})
+        if assistant_msg:
+            crew_history.append({"role": "assistant", "content": assistant_msg})
+    
+    # Add current message
+    crew_history.append({"role": "user", "content": message})
+    
+    # Pass the converted history to the backend
     inputs = {
-        'topic': 'AI LLMs',
-        'current_year': str(datetime.now().year)
+        'human_feedback': message
+        #'content': message,
+        #'role': 'user',
+        #'history': crew_history
     }
+
+    print("[LOG] respond() method called with message:", message)
+    print("[LOG] History length:", len(crew_history))
     
     try:
-        TripPlanning().crew().kickoff(inputs=inputs)
+        result = TripPlanning().crew().kickoff(inputs=inputs)
+        print("[LOG] Crew result:", result)
+        
+        # Return the result and let Gradio handle the history
+        return result.raw, history
     except Exception as e:
-        raise Exception(f"An error occurred while running the crew: {e}")
+        print("[LOG] Error - respond():", e)
+        error_msg = f"❌ **Error**: An error occurred while running the crew: {str(e)}"
+        return error_msg, history
 
+
+
+def run():
+    """
+    Run the crew (for backward compatibility).
+    """
+    inputs = {
+        "origin": "Bogota, Colombia",
+        "destination": "Melgar, Colombia",
+        "start_date": "11/01/2025",
+        "end_date": "11/15/2025",
+        "budget": "10K USD per person",
+        "travelers": 5,
+        "trip_type": "Vacations",
+        "accomodation": "Hotel",
+        "flights": "economic"
+    }
+
+    TripPlanning().crew().kickoff(inputs=inputs)
 
 def train():
     """
