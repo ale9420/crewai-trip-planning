@@ -78,14 +78,15 @@ def run():
     """
     inputs = {
         "origin": "Bogota, Colombia",
-        "destination": "Istanbul, Turkey",
+        "destination": "Medellin, Colombia",
         "start_date": "11/01/2025",
         "end_date": "11/15/2025",
-        "budget": "10K USD per person",
+        "budget": "5K USD per person",
         "travelers": 5,
         "trip_type": "Vacations",
         "accomodation": "Hotel",
-        "flights": "economic"
+        "flights": "economic",
+        "user_preferences": "I want to go to a place where I can relax and enjoy the nature"
     }
 
     TripPlanning().crew().kickoff(inputs=inputs)
