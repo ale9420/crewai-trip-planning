@@ -6,7 +6,7 @@ that agents use to provide comprehensive lodging information and recommendations
 """
 
 from pydantic import BaseModel, Field
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Any
 from .common import PriceInfo, Location, Review, ContactInfo
 
 
@@ -106,23 +106,23 @@ class AccommodationOption(BaseModel):
 
 class AccommodationRecommendations(BaseModel):
     """Specific recommendations by traveler type and preferences."""
-    best_value_options: List[str] = Field(description="Top 3 value-for-money options")
-    best_for_families: str = Field(description="Best option for families with children")
-    best_for_business: str = Field(description="Best option for business travelers")
-    best_for_budget: str = Field(description="Best option for budget-conscious travelers")
-    best_for_luxury: str = Field(description="Best option for luxury seekers")
-    best_for_cultural_immersion: str = Field(description="Best option for cultural immersion")
-    alternative_neighborhoods: List[str] = Field(description="Alternative neighborhoods to consider")
+    best_value_options: List[str] = Field(default_factory=list, description="Top 3 value-for-money options")
+    best_for_families: Optional[str] = Field(default=None, description="Best option for families with children")
+    best_for_business: Optional[str] = Field(default=None, description="Best option for business travelers")
+    best_for_budget: Optional[str] = Field(default=None, description="Best option for budget-conscious travelers")
+    best_for_luxury: Optional[str] = Field(default=None, description="Best option for luxury seekers")
+    best_for_cultural_immersion: Optional[str] = Field(default=None, description="Best option for cultural immersion")
+    alternative_neighborhoods: List[str] = Field(default_factory=list, description="Alternative neighborhoods to consider")
 
 
 class LocationInsights(BaseModel):
     """Comprehensive location and neighborhood insights."""
-    neighborhood_safety: Dict[str, float] = Field(description="Safety ratings by neighborhood")
-    proximity_analysis: Dict[str, List[str]] = Field(description="Proximity to attractions and transport")
-    dining_options: Dict[str, List[str]] = Field(description="Local dining options by area")
-    shopping_districts: List[str] = Field(description="Shopping districts and areas")
-    cultural_districts: List[str] = Field(description="Cultural and entertainment districts")
-    transportation_hubs: List[str] = Field(description="Major transportation hubs and accessibility")
+    neighborhood_safety: Dict[str, float] = Field(default_factory=dict, description="Safety ratings by neighborhood")
+    proximity_analysis: Dict[str, List[str]] = Field(default_factory=dict, description="Proximity to attractions and transport")
+    dining_options: Dict[str, List[str]] = Field(default_factory=dict, description="Local dining options by area")
+    shopping_districts: List[str] = Field(default_factory=list, description="Shopping districts and areas")
+    cultural_districts: List[str] = Field(default_factory=list, description="Cultural and entertainment districts")
+    transportation_hubs: List[str] = Field(default_factory=list, description="Major transportation hubs and accessibility")
 
 
 class AccommodationSearchResults(BaseModel):
@@ -133,24 +133,24 @@ class AccommodationSearchResults(BaseModel):
     recommendations, and important considerations for travelers.
     """
     # Search Summary
-    search_summary: Dict[str, str] = Field(description="Summary of search results and criteria")
-    total_options_found: int = Field(description="Total number of accommodation options found")
-    price_range: Dict[str, PriceInfo] = Field(description="Price range (lowest to highest)")
-    location_highlights: List[str] = Field(description="Key areas and neighborhoods")
+    search_summary: Optional[Dict[str, str]] = Field(default_factory=dict, description="Summary of search results and criteria")
+    total_options_found: int = Field(default=0, description="Total number of accommodation options found")
+    price_range: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Price range (lowest to highest)")
+    location_highlights: List[str] = Field(default_factory=list, description="Key areas and neighborhoods")
     
     # Detailed Options
-    accommodation_options: List[AccommodationOption] = Field(description="List of detailed accommodation options")
+    accommodation_options: List[AccommodationOption] = Field(default_factory=list, description="List of detailed accommodation options")
     
     # Recommendations
-    recommendations: AccommodationRecommendations = Field(description="Specific recommendations by traveler type")
+    recommendations: Optional[AccommodationRecommendations] = Field(default=None, description="Specific recommendations by traveler type")
     
     # Location Insights
-    location_insights: LocationInsights = Field(description="Comprehensive location and neighborhood insights")
+    location_insights: Optional[LocationInsights] = Field(default=None, description="Comprehensive location and neighborhood insights")
     
     # Additional Information
-    booking_tips: List[str] = Field(description="Best practices for booking accommodation")
-    seasonal_considerations: List[str] = Field(description="Seasonal price variations and availability")
-    important_notes: List[str] = Field(description="Important warnings, advisories, or restrictions")
-    upcoming_events: List[str] = Field(description="Upcoming events that may affect availability")
-    loyalty_program_benefits: List[str] = Field(description="Loyalty program benefits and recommendations")
-    special_promotions: List[str] = Field(description="Special packages or promotions available")
+    booking_tips: List[str] = Field(default_factory=list, description="Best practices for booking accommodation")
+    seasonal_considerations: List[str] = Field(default_factory=list, description="Seasonal price variations and availability")
+    important_notes: List[str] = Field(default_factory=list, description="Important warnings, advisories, or restrictions")
+    upcoming_events: List[str] = Field(default_factory=list, description="Upcoming events that may affect availability")
+    loyalty_program_benefits: List[str] = Field(default_factory=list, description="Loyalty program benefits and recommendations")
+    special_promotions: List[str] = Field(default_factory=list, description="Special packages or promotions available")

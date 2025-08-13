@@ -78,7 +78,7 @@ def run():
     """
     inputs = {
         "origin": "Bogota, Colombia",
-        "destination": "Medellin, Colombia",
+        "destination": "Cali, Colombia",
         "start_date": "11/01/2025",
         "end_date": "11/15/2025",
         "budget": "5K USD per person",

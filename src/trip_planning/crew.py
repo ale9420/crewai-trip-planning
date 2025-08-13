@@ -37,6 +37,13 @@ class TripPlanning():
             tools=[SerperDevTool()],
             verbose=True
         )
+
+    @agent
+    def budget_manager(self) -> Agent:
+        return Agent(
+            config=self.agents_config['budget_manager'], # type: ignore[index]
+            verbose=True
+        )
     
     @agent
     def itinerary_planner(self) -> Agent:
@@ -49,6 +56,13 @@ class TripPlanning():
     def recommendation_engine(self) -> Agent:
         return Agent(
             config=self.agents_config['recommendation_engine'], # type: ignore[index]
+            verbose=True
+        )
+
+    @agent
+    def quality_assurance(self) -> Agent:
+        return Agent(
+            config=self.agents_config['quality_assurance'], # type: ignore[index]
             verbose=True
         )
     
@@ -104,47 +118,25 @@ class TripPlanning():
         )
 
     @task
-    def optimize_routes_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['optimize_routes_task'], # type: ignore[index]
-            expected_output="optimized_routes.md"
-        )
-    
-    @task
-    def integrate_preferences_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['integrate_preferences_task'], # type: ignore[index]
-            expected_output="personalized_itinerary.md"
-        )
-
-    @task
-    def create_contingency_plans_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['create_contingency_plans_task'], # type: ignore[index]
-            expected_output="contingency_plans.md"
-        )
-    
-    # Quality Assurance Phase
-    @task
-    def validate_itinerary_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['validate_itinerary_task'], # type: ignore[index]
-            expected_output="validation_report.md"
-        )
-
-    @task
-    def test_logistics_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['test_logistics_task'], # type: ignore[index]
-            expected_output="logistics_verification.md"
-        )
-
-    @task
     def budget_final_check_task(self) -> Task:
         return Task(
             config=self.tasks_config['budget_final_check_task'], # type: ignore[index]
             expected_output="final_budget_summary.md"
         )
+
+    @task
+    def validate_itinerary_task(self) -> Task:
+       return Task(
+           config=self.tasks_config['validate_itinerary_task'],
+           expected_output="itinerary_validation_report.md"
+       )
+
+    @task
+    def create_travel_document_task(self) -> Task:
+       return Task(
+           config=self.tasks_config['create_travel_document_task'],
+           expected_output="comprehensive_travel_document.md"
+       )
 
     @crew
     def crew(self) -> Crew:
