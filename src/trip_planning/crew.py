@@ -6,7 +6,7 @@ from crewai.memory.storage.rag_storage import RAGStorage
 from crewai.memory.storage.ltm_sqlite_storage import LTMSQLiteStorage
 from typing import List
 from crewai_tools import SerperDevTool
-from .models import DestinationInvestigation, FlightOption, FlightSearchResults
+from .models import DestinationInvestigation, FlightOption, FlightSearchResults, AccommodationSearchResults
 
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
@@ -85,7 +85,7 @@ class TripPlanning():
     def accommodation_search_task(self) -> Task:
         return Task(
             config=self.tasks_config['accommodation_search_task'], # type: ignore[index]
-            expected_output="accommodation_options.md"
+            output_pydantic=AccommodationSearchResults
         )
 
     @task
@@ -109,7 +109,7 @@ class TripPlanning():
             expected_output="dining_options.md"
         )
 
-    # Budget Management Phase
+    #Budget Management Phase
     @task
     def budget_analysis_task(self) -> Task:
         return Task(
