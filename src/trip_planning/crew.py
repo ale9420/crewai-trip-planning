@@ -37,13 +37,6 @@ class TripPlanning():
             tools=[SerperDevTool()],
             verbose=True
         )
-
-    @agent
-    def budget_manager(self) -> Agent:
-        return Agent(
-            config=self.agents_config['budget_manager'], # type: ignore[index]
-            verbose=True
-        )
     
     @agent
     def itinerary_planner(self) -> Agent:
@@ -56,13 +49,6 @@ class TripPlanning():
     def recommendation_engine(self) -> Agent:
         return Agent(
             config=self.agents_config['recommendation_engine'], # type: ignore[index]
-            verbose=True
-        )
-
-    @agent
-    def quality_assurance(self) -> Agent:
-        return Agent(
-            config=self.agents_config['quality_assurance'], # type: ignore[index]
             verbose=True
         )
     
@@ -107,21 +93,6 @@ class TripPlanning():
         return Task(
             config=self.tasks_config['dining_search_task'], # type: ignore[index]
             expected_output="dining_options.md"
-        )
-
-    #Budget Management Phase
-    @task
-    def budget_analysis_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['budget_analysis_task'], # type: ignore[index]
-            expected_output="budget_analysis.md"
-        )
-
-    @task
-    def cost_optimization_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['cost_optimization_task'], # type: ignore[index]
-            expected_output="cost_optimization.md"
         )
 
     # Planning Phase
