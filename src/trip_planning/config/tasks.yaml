@@ -556,8 +556,6 @@ transportation_search_task:
     - Mobile app recommendations for navigation
     - Payment method preferences and requirements
     
-    **FORMAT:** Present in a clear, scannable format with tables, bullet points, and highlighted key information.
-    Include maps and route visualizations when available to help users understand the transportation network.
   agent: travel_searcher
 
 attraction_search_task:
@@ -1218,6 +1216,45 @@ structure_itinerary_task:
     
     **FORMAT:** Present in a clear, scannable format with daily schedules, maps, and highlighted key information.
     Include timing details, costs, and special instructions for each activity.
+  expected_output: >
+    **COMPREHENSIVE ITINERARY PLAN**
+
+    **SUMMARY:**
+    - Trip duration: [start_date] to [end_date]
+    - Number of travelers: [number]
+    - Trip type: [type]
+    - Key preferences: [summary of user preferences]
+    - Accessibility features: [summary]
+
+    **DAILY SCHEDULE (for each day):**
+    - **Morning (8:00-12:00):** [activity name, location, timing, notes]
+    - **Lunch (12:00-13:30):** [dining option, location, dietary notes]
+    - **Afternoon (13:30-17:30):** [activity name, location, timing, notes]
+    - **Evening (17:30-21:00):** [dining/entertainment, location, timing, notes]
+    - **Night (21:00+):** [optional activities, rest, notes]
+
+    **LOGISTICS:**
+    - Accommodation details: [hotel name, address, check-in/out, amenities]
+    - Transportation plan: [routes, modes, timing, accessibility]
+    - Booking requirements: [advance reservations, tickets, confirmations]
+    - Rest periods: [scheduled breaks, flexibility]
+
+    **OPTIMIZATION & RECOMMENDATIONS:**
+    - Route and timing optimizations: [suggested improvements]
+    - Activity combinations: [logical groupings]
+    - Experience enhancements: [local immersion, premium upgrades]
+    - Contingency plans: [weather, accessibility, alternatives]
+
+    **SPECIAL CONSIDERATIONS:**
+    - Accessibility: [wheelchair routes, sensory-friendly options]
+    - Family-friendly features: [child-appropriate activities, safety]
+    - Dietary accommodations: [meal planning, restrictions]
+    - Budget management: [cost breakdown, savings tips]
+
+    **FORMAT:**  
+    Present the itinerary in a clear, scannable format with daily schedules, tables, maps, and highlighted key information.  
+    Include timing details, costs, and special instructions for each activity.  
+    Use visual elements (icons, color coding) for accessibility and clarity.
   agent: itinerary_planner
 
 # Quality Assurance Phase
@@ -1290,9 +1327,9 @@ validate_itinerary_task:
     **User Preference Verification:**
     - **Interest Alignment:** [percentage match with user interests]
     - **Budget Compliance:** [cost analysis vs. budget constraints]
-    - **Accessibility Support:** [venue accessibility feature verification]
+    - **Accessibility Support:** [percentage of venues supporting special needs]
     - **Dietary Accommodation:** [restaurant dietary option verification]
-    - **Travel Style Match:** [experience alignment with preferred style]
+    - **Travel Style Match:** [percentage of experiences matching preferred style]
     
     **QUALITY METRICS:**
     
@@ -1932,7 +1969,7 @@ create_travel_document_task:
     - **Peak Season:** [crowds, prices, booking requirements]
     - **Off-Season:** [advantages, weather considerations]
     - **Local Events:** [festivals, holidays, special events]
-    - **Weather Patterns:** [what to expect and how to prepare]
+    - **Weather Patterns:** [monthly averages and what to expect]
     
     **7. SAFETY & EMERGENCY**
     

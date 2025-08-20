@@ -6,7 +6,11 @@ from crewai.memory.storage.rag_storage import RAGStorage
 from crewai.memory.storage.ltm_sqlite_storage import LTMSQLiteStorage
 from typing import List
 from crewai_tools import SerperDevTool
-from .models import DestinationInvestigation, FlightOption, FlightSearchResults, AccommodationSearchResults
+
+from trip_planning.models.budget import FinalBudgetSummary
+from trip_planning.models.dining import DiningSearchResults
+from .models import DestinationInvestigation, FlightSearchResults, AccommodationSearchResults, TransportationSearchResults, AttractionSearchResults, StructuredItinerary, ItineraryValidationReport, ComprehensiveTravelDocument
+
 
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
@@ -42,6 +46,7 @@ class TripPlanning():
     def budget_manager(self) -> Agent:
         return Agent(
             config=self.agents_config['budget_manager'], # type: ignore[index]
+            tools=[SerperDevTool()],
             verbose=True
         )
     
@@ -49,6 +54,7 @@ class TripPlanning():
     def itinerary_planner(self) -> Agent:
         return Agent(
             config=self.agents_config['itinerary_planner'], # type: ignore[index]
+            tools=[SerperDevTool()],
             verbose=True
         )
 
@@ -56,6 +62,7 @@ class TripPlanning():
     def recommendation_engine(self) -> Agent:
         return Agent(
             config=self.agents_config['recommendation_engine'], # type: ignore[index]
+            tools=[SerperDevTool()],
             verbose=True
         )
 
@@ -92,21 +99,21 @@ class TripPlanning():
     def transportation_search_task(self) -> Task:
         return Task(
             config=self.tasks_config['transportation_search_task'], # type: ignore[index]
-            expected_output="transportation_options.md"
+            output_pydantic=TransportationSearchResults
         )
 
     @task
     def attraction_search_task(self) -> Task:
         return Task(
             config=self.tasks_config['attraction_search_task'], # type: ignore[index]
-            expected_output="attraction_options.md"
+            output_pydantic=AttractionSearchResults
         )
 
     @task
     def dining_search_task(self) -> Task:
         return Task(
             config=self.tasks_config['dining_search_task'], # type: ignore[index]
-            expected_output="dining_options.md"
+            output_pydantic=DiningSearchResults
         )
 
     # Planning Phase
@@ -114,28 +121,28 @@ class TripPlanning():
     def structure_itinerary_task(self) -> Task:
         return Task(
             config=self.tasks_config['structure_itinerary_task'], # type: ignore[index]
-            expected_output="structured_itinerary.md"
+            output_pydantic=StructuredItinerary
         )
 
     @task
     def budget_final_check_task(self) -> Task:
         return Task(
             config=self.tasks_config['budget_final_check_task'], # type: ignore[index]
-            expected_output="final_budget_summary.md"
+            output_pydantic=FinalBudgetSummary
         )
 
     @task
     def validate_itinerary_task(self) -> Task:
        return Task(
            config=self.tasks_config['validate_itinerary_task'],
-           expected_output="itinerary_validation_report.md"
+           output_pydantic=ItineraryValidationReport
        )
 
     @task
     def create_travel_document_task(self) -> Task:
        return Task(
            config=self.tasks_config['create_travel_document_task'],
-           expected_output="comprehensive_travel_document.md"
+           output_pydantic=ComprehensiveTravelDocument
        )
 
     @crew

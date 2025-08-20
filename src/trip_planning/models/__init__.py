@@ -8,6 +8,23 @@ to ensure consistent and validated data structures across the application.
 from .destination import DestinationInvestigation
 from .flight import FlightOption, FlightSearchResults
 from .accommodation import AccommodationOption, AccommodationSearchResults
+from .transportation import (
+    PublicTransportOption,
+    CarRentalOption,
+    RideSharingOption,
+    TaxiServiceOption,
+    AlternativeTransportOption,
+    TouristTransportOption,
+    TransportationSearchResults
+)
+from .attraction import (
+    CulturalHistoricalAttraction,
+    NaturalOutdoorAttraction,
+    EntertainmentRecreationAttraction,
+    LocalExperienceTour,
+    SeasonalSpecialEvent,
+    AttractionSearchResults
+)
 from .common import (
     TravelerType, 
     BudgetRange, 
@@ -16,6 +33,11 @@ from .common import (
     ContactInfo, 
     Review
 )
+from .dining import DiningOption, DiningSearchResults
+from .itinerary import ItineraryActivity, ItineraryDay, StructuredItinerary
+from .budget import CostBreakdownItem, VariableCostItem, FinalBudgetSummary
+from .itinerary_validation import ValidationMetric, ItineraryIssue, ItineraryValidationReport
+from .travel_document import TravelDocumentSection, EmergencyContact, ComprehensiveTravelDocument
 
 __all__ = [
     # Destination models
@@ -29,11 +51,52 @@ __all__ = [
     "AccommodationOption",
     "AccommodationSearchResults",
     
+    # Transportation models
+    "PublicTransportOption",
+    "CarRentalOption",
+    "RideSharingOption",
+    "TaxiServiceOption",
+    "AlternativeTransportOption",
+    "TouristTransportOption",
+    "TransportationSearchResults",
+    
+    # Attraction models
+    "CulturalHistoricalAttraction",
+    "NaturalOutdoorAttraction",
+    "EntertainmentRecreationAttraction",
+    "LocalExperienceTour",
+    "SeasonalSpecialEvent",
+    "AttractionSearchResults",
+    
     # Common models
     "TravelerType",
     "BudgetRange", 
     "Location", 
     "PriceInfo", 
     "ContactInfo", 
-    "Review"
+    "Review",
+    
+    # Dining models
+    "DiningOption",
+    "DiningSearchResults",
+    
+    # Itinerary models
+    "ItineraryActivity",
+    "ItineraryDay",
+    "StructuredItinerary",
+    
+    # Budget models
+    "CostBreakdownItem",
+    "VariableCostItem",
+    "FinalBudgetSummary",
+    
+    # Itinerary validation models
+    "ValidationMetric",
+    "ItineraryIssue",
+    "ItineraryValidationReport",
+    
+    # Travel document models
+    "TravelDocumentSection",
+    "EmergencyContact",
+    "ComprehensiveTravelDocument",
 ]
