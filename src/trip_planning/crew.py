@@ -6,16 +6,13 @@ from crewai.memory.storage.rag_storage import RAGStorage
 from crewai.memory.storage.ltm_sqlite_storage import LTMSQLiteStorage
 from typing import List
 from crewai_tools import SerperDevTool
-
 from trip_planning.models.budget import FinalBudgetSummary
 from trip_planning.models.dining import DiningSearchResults
 from .models import DestinationInvestigation, FlightSearchResults, AccommodationSearchResults, TransportationSearchResults, AttractionSearchResults, StructuredItinerary, ItineraryValidationReport, ComprehensiveTravelDocument
 
-
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
-
 @CrewBase
 class TripPlanning():
     """TripPlanning crew"""
@@ -156,7 +153,7 @@ class TripPlanning():
             tasks=self.tasks, # Automatically created by the @task decorator
             process=Process.sequential,
             verbose=False,
-            memory=True,
+            memory=True,  # Disabled to reduce context usage
             # Long-term memory for persistent storage across sessions
             long_term_memory = LongTermMemory(
                 storage=LTMSQLiteStorage(

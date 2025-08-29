@@ -1,2113 +1,307 @@
-# Research Phase
-
 destination_search_task:
   description: >
-    Consider the following specific travel preferences:
-
-    Origin: {origin}
-    Destination: {destination}
-    Start Date: {start_date}
-    End Date: {end_date}
-    Budget: {budget}
-    Travelers: {travelers}
-    Trip Type: {trip_type}
-    Accommodation: {accomodation}
-    Flights: {flights}
-
-    Conduct an in-depth investigation of the selected destination to provide the traveler with all essential and value-adding information for trip planning and decision-making.
-    This includes not only basic facts, but also actionable insights, local nuances, and up-to-date considerations.
-    The research should be tailored to the user's travel dates, preferences, and any special requirements already gathered.
-    The output should empower both the planning agents and the user to make informed, safe, and enjoyable choices.
+    Research destination {destination} for travel from {start_date} to {end_date}.
+    Consider: {budget}, {travelers}, {trip_type}, {accomodation}, {flights}, {origin}
   expected_output: >
-    **DESTINATION INTELLIGENCE REPORT**
-
-    1. **Weather & Climate:**  
-       - Typical weather conditions (temperature, precipitation, humidity) for the specified travel dates.
-       - Seasonal considerations (e.g., monsoon, hurricane, dry/wet season, pollen/allergy alerts).
-       - Packing tips based on expected weather.
-
-    2. **Events & Festivals:**  
-       - Major public holidays, festivals, or special events during the travel period.
-       - Impact on crowds, prices, and availability.
-       - Unique local experiences or must-see events.
-
-    3. **Entry & Visa Requirements:**  
-       - Visa requirements for the traveler's nationality.
-       - Passport validity, e-visa or on-arrival options, and any recent changes.
-       - Health requirements (vaccinations, COVID-19 rules, travel insurance mandates).
-
-    4. **Safety & Security:**  
-       - General safety level (crime, scams, political stability).
-       - Areas to avoid, local laws, and emergency contacts.
-       - Health and medical care availability, including pharmacies and hospitals.
-
-    5. **Cultural Norms & Etiquette:**  
-       - Key customs, dress codes, and social etiquette.
-       - Tipping practices, language basics, and local dos/don'ts.
-       - Notable cultural sensitivities or taboos.
-
-    6. **Best Times to Visit Attractions:**  
-       - Opening hours and best visiting times for major attractions.
-       - Recommendations for avoiding crowds or maximizing experience.
-
-    7. **Local Transportation:**  
-       - Overview of public transit, taxis, ride-sharing, and walking safety.
-       - Accessibility for travelers with special needs.
-
-    8. **Money & Connectivity:**  
-       - Currency, payment methods, and ATM availability.
-       - Internet access, SIM cards, and mobile coverage.
-
-    9. **Insider Tips:**  
-       - Local secrets, hidden gems, or off-the-beaten-path suggestions.
-       - Common tourist mistakes to avoid.
-
-    10. **Recent Developments:**  
-        - Any recent news, travel advisories, or disruptions relevant to the travel period.
-
-    **FORMAT:**  
-    Present the information in a clear, organized, and visually scannable format (bulleted lists, tables, or sections as appropriate).  
-    Highlight any critical warnings or must-know facts.  
-    Tailor recommendations to the user's interests and requirements if available.
+    {
+      "weather": {
+        "temperature_range": "string",
+        "conditions": "string",
+        "seasonal_alerts": ["string"]
+      },
+      "events": {
+        "holidays": ["string"],
+        "festivals": ["string"],
+        "special_events": ["string"]
+      },
+      "entry_requirements": {
+        "visa": {
+          "required": boolean,
+          "process": "string",
+          "cost": "string",
+          "timeline": "string"
+        },
+        "health": {
+          "vaccinations": ["string"],
+          "covid_rules": "string",
+          "insurance": "string"
+        }
+      }
+    }
   agent: travel_searcher
 
 flight_search_task:
   description: >
-    Conduct a comprehensive flight search using multiple airline APIs, aggregators (Skyscanner, Google Flights, Kayak), 
-    and direct airline websites to find optimal flight options that match the user's travel requirements.
-    
-    **SEARCH CRITERIA:**
-    - Origin: {origin}
-    - Destination: {destination}
-    - Departure Date: {start_date}
-    - Return Date: {end_date} (if round-trip)
-    - Budget: {budget}
-    - Number of Travelers: {travelers}
-    - Trip Type: {trip_type}
-    - Flight Preferences: {flights}
-    
-    **SEARCH STRATEGY:**
-    1. **Primary Search:** Direct flights and 1-stop connections within budget
-    2. **Alternative Routes:** Consider nearby airports for better pricing
-    3. **Flexible Dates:** Check +/- 1-3 days for better rates if dates are flexible
-    4. **Multiple Airlines:** Include major carriers, budget airlines, and regional options
-    5. **Booking Classes:** Economy, Premium Economy, Business (if within budget)
-    6. **Special Considerations:** 
-       - Accessibility features for travelers with disabilities
-       - Family-friendly options (seat selection, meal options)
-       - Business traveler amenities (WiFi, power outlets, lounge access)
-       - Baggage allowances and fees
-       - Cancellation/change policies
-    
-    **EVALUATION CRITERIA:**
-    - Price competitiveness and value for money
-    - Travel time and layover efficiency
-    - Departure/arrival times (avoiding red-eyes unless requested)
-    - Airline reputation and safety record
-    - On-time performance and reliability
-    - Baggage policies and hidden fees
-    - Seat comfort and legroom
-    - In-flight amenities (WiFi, entertainment, meals)
-    - Loyalty program benefits (if applicable)
-    
-    **SPECIAL REQUIREMENTS:**
-    - Check visa requirements for layover countries
-    - Verify COVID-19 testing/vaccination requirements
-    - Consider travel insurance recommendations
-    - Check for any travel advisories or restrictions
-    
+    Search flights using multiple sources for {origin} to {destination}.
+    Consider: {budget}, {travelers}, {trip_type}, {start_date}, {end_date}, {flights}
   expected_output: >
-    **FLIGHT SEARCH RESULTS**
-    
-    **SUMMARY:**
-    - Total options found: [number]
-    - Price range: [lowest] - [highest] [currency]
-    - Best value options: [highlight top 3]
-    
-    **DETAILED OPTIONS (Maximum 10):**
-    
-    For each flight option, provide:
-    
-    1. **Flight Details:**
-       - Airline(s) and flight numbers
-       - Departure/arrival times (local time)
-       - Total travel time
-       - Number of stops and layover details
-       - Aircraft type and configuration
-    
-    2. **Pricing Information:**
-       - Total price per person
-       - Breakdown: base fare + taxes + fees
-       - Baggage allowance and fees
-       - Seat selection costs
-       - Cancellation/change fees
-    
-    3. **Travel Experience:**
-       - Cabin class and seat configuration
-       - In-flight amenities (WiFi, entertainment, meals)
-       - On-time performance statistics
-       - Customer satisfaction ratings
-    
-    4. **Practical Considerations:**
-       - Airport transfer times and costs
-       - Visa requirements for layovers
-       - COVID-19 requirements
-       - Travel insurance recommendations
-    
-    5. **Booking Information:**
-       - Booking class and fare rules
-       - Loyalty program earning potential
-       - Best booking channels (direct vs. aggregator)
-       - Recommended booking timing
-    
-    **RECOMMENDATIONS:**
-    - Top 3 value-for-money options
-    - Best option for families with children
-    - Best option for business travelers
-    - Best option for budget-conscious travelers
-    - Alternative airports to consider
-    - Flexible date recommendations for better pricing
-    
-    **IMPORTANT NOTES:**
-    - Highlight any seasonal price variations
-    - Note any upcoming fare sales or promotions
-    - Include any travel advisories or restrictions
-    - Provide booking tips and best practices
-    
-    **FORMAT:** Present in a clear, scannable format with tables, bullet points, and highlighted key information.
+    {
+      "summary": {
+        "total_options": integer,
+        "price_range": {
+          "lowest": "string",
+          "highest": "string",
+          "currency": "string"
+        },
+        "best_value": ["string"]
+      },
+      "flight_options": [
+        {
+          "flight_details": {
+            "airline": "string",
+            "flight_number": "string",
+            "departure": {
+              "time": "string",
+              "airport": "string"
+            },
+            "arrival": {
+              "time": "string",
+              "airport": "string"
+            },
+            "duration": "string",
+            "stops": {
+              "count": integer,
+              "layovers": [
+                {
+                  "airport": "string",
+                  "duration": "string"
+                }
+              ]
+            }
+          },
+          "pricing": {
+            "total": "string",
+            "breakdown": {
+              "base": "string",
+              "taxes": "string",
+              "fees": "string"
+            }
+          }
+        }
+      ]
+    }
   agent: travel_searcher
 
 accommodation_search_task:
   description: >
-    Conduct a comprehensive accommodation search using multiple booking platforms (Booking.com, Expedia, Airbnb, Hotels.com, 
-    Hostelworld, VRBO) to find optimal lodging options that match the user's travel requirements and preferences.
-    
-    **SEARCH CRITERIA:**
-    - Destination: {destination}
-    - Check-in Date: {start_date}
-    - Check-out Date: {end_date}
-    - Budget: {budget}
-    - Number of Travelers: {travelers}
-    - Trip Type: {trip_type}
-    - Accommodation Preferences: {accomodation}
-    
-    **SEARCH STRATEGY:**
-    1. **Primary Search:** Hotels, resorts, and traditional accommodations within budget
-    2. **Alternative Options:** Vacation rentals, hostels, boutique hotels, and unique stays
-    3. **Location Analysis:** Proximity to attractions, public transport, and safety considerations
-    4. **Multiple Booking Channels:** Direct booking, OTA platforms, and property management companies
-    5. **Accommodation Types:** 
-       - Luxury hotels and resorts
-       - Mid-range hotels and business hotels
-       - Budget hotels and hostels
-       - Vacation rentals (apartments, houses, villas)
-       - Boutique hotels and unique accommodations
-       - All-inclusive resorts (if applicable)
-    6. **Special Considerations:**
-       - Accessibility features for travelers with disabilities
-       - Family-friendly amenities (cribs, kids' clubs, connecting rooms)
-       - Business traveler needs (work spaces, meeting rooms, business centers)
-       - Pet-friendly options (if applicable)
-       - Long-term stay discounts
-       - Group booking benefits
-    
-    **EVALUATION CRITERIA:**
-    - Price competitiveness and value for money
-    - Location quality (safety, convenience, proximity to attractions)
-    - Guest ratings and reviews (minimum 4.0+ rating preferred)
-    - Cleanliness and maintenance standards
-    - Staff friendliness and service quality
-    - Amenities and facilities quality
-    - Cancellation and booking flexibility
-    - Security and safety features
-    - Environmental sustainability practices
-    - Cultural authenticity and local experience
-    
-    **AMENITIES ANALYSIS:**
-    - **Essential:** WiFi, air conditioning/heating, private bathroom, clean bedding
-    - **Comfort:** Pool, gym, spa, restaurant, room service, concierge
-    - **Convenience:** Airport shuttle, parking, laundry, kitchen facilities
-    - **Safety:** 24/7 front desk, security cameras, safe deposit box
-    - **Accessibility:** Elevator, wheelchair access, accessible bathrooms
-    - **Family:** Cribs, kids' activities, family rooms, playground
-    - **Business:** Work desk, meeting rooms, business center, printing
-    
-    **LOCATION ASSESSMENT:**
-    - Distance to major attractions and public transport
-    - Neighborhood safety and walkability
-    - Proximity to restaurants, shops, and services
-    - Noise levels and environmental factors
-    - Parking availability and costs
-    - Accessibility for travelers with mobility issues
-    
-    **SPECIAL REQUIREMENTS:**
-    - Check for any seasonal pricing variations
-    - Verify COVID-19 policies and cleaning protocols
-    - Consider travel insurance recommendations
-    - Check for any local regulations or restrictions
-    - Verify booking policies and payment methods
-    
+    Search accommodations in {destination} from {start_date} to {end_date}.
+    Consider: {budget}, {travelers}, {trip_type}, {accomodation}
   expected_output: >
-    **ACCOMMODATION SEARCH RESULTS**
-    
-    **SUMMARY:**
-    - Total options found: [number]
-    - Price range: [lowest] - [highest] [currency] per night
-    - Best value options: [highlight top 3]
-    - Location highlights: [key areas and neighborhoods]
-    
-    **DETAILED OPTIONS (Maximum 10):**
-    
-    For each accommodation option, provide:
-    
-    1. **Basic Information:**
-       - Property name and type (hotel, resort, vacation rental, hostel)
-       - Star rating and guest score
-       - Address and neighborhood description
-       - Distance to key attractions and transport
-    
-    2. **Pricing & Booking:**
-       - Total price for stay (including taxes and fees)
-       - Price breakdown: base rate + taxes + resort fees
-       - Cancellation policy and flexibility
-       - Payment methods and deposit requirements
-       - Best booking channels and timing
-    
-    3. **Room & Amenities:**
-       - Room types available and configurations
-       - Bed sizes and sleeping arrangements
-       - Private vs. shared bathroom
-       - Key amenities (WiFi, AC, TV, minibar, etc.)
-       - Special features (balcony, view, kitchen, etc.)
-    
-    4. **Property Features:**
-       - On-site facilities (pool, gym, spa, restaurant)
-       - Services offered (concierge, room service, laundry)
-       - Safety and security features
-       - Accessibility accommodations
-       - Environmental initiatives
-    
-    5. **Guest Experience:**
-       - Recent guest reviews and ratings
-       - Staff friendliness and service quality
-       - Cleanliness and maintenance standards
-       - Noise levels and atmosphere
-       - Cultural authenticity and local experience
-    
-    6. **Practical Information:**
-       - Check-in/check-out times
-       - Airport transfer options and costs
-       - Parking availability and fees
-       - Pet policies (if applicable)
-       - COVID-19 protocols and cleaning standards
-    
-    **RECOMMENDATIONS:**
-    - Top 3 value-for-money options
-    - Best option for families with children
-    - Best option for business travelers
-    - Best option for budget-conscious travelers
-    - Best option for luxury seekers
-    - Best option for cultural immersion
-    - Alternative neighborhoods to consider
-    
-    **LOCATION INSIGHTS:**
-    - Neighborhood safety ratings
-    - Proximity to attractions and transport
-    - Local dining and shopping options
-    - Cultural and entertainment districts
-    - Transportation hub accessibility
-    
-    **IMPORTANT NOTES:**
-    - Highlight any seasonal price variations
-    - Note any upcoming events that may affect availability
-    - Include any travel advisories or restrictions
-    - Provide booking tips and best practices
-    - Mention any loyalty program benefits
-    - Note any special packages or promotions
-    
-    **FORMAT:** Present in a clear, scannable format with tables, bullet points, and highlighted key information.
-    Include photos and maps when available to help visualize the options.
+    {
+      "summary": {
+        "total_options": integer,
+        "price_range": {
+          "lowest": "string",
+          "highest": "string",
+          "currency": "string"
+        },
+        "best_value": ["string"]
+      },
+      "accommodations": [
+        {
+          "basic_info": {
+            "name": "string",
+            "type": "string",
+            "rating": float,
+            "address": "string",
+            "location": "string"
+          },
+          "pricing": {
+            "total": "string",
+            "per_night": "string",
+            "fees": "string"
+          },
+          "features": {
+            "amenities": ["string"],
+            "room_types": ["string"],
+            "accessibility": ["string"]
+          }
+        }
+      ]
+    }
   agent: travel_searcher
 
 transportation_search_task:
   description: >
-    Conduct a comprehensive local transportation analysis using multiple sources (Google Maps, local transit websites, 
-    ride-sharing apps, car rental platforms) to find optimal transportation options for getting around the destination.
-    
-    **SEARCH CRITERIA:**
-    - Destination: {destination}
-    - Travel Dates: {start_date} to {end_date}
-    - Budget: {budget}
-    - Number of Travelers: {travelers}
-    - Trip Type: {trip_type}
-    - Accessibility Requirements: [from user preferences]
-    - Mobility Preferences: [walking, cycling, driving comfort level]
-    
-    **SEARCH STRATEGY:**
-    1. **Public Transportation Analysis:**
-       - Metro/subway systems, buses, trams, and light rail
-       - Regional trains and intercity connections
-       - Airport transfers and shuttle services
-       - Tourist-specific transportation passes and cards
-       - Night transportation options and schedules
-    
-    2. **Private Transportation Options:**
-       - Car rental services (international and local companies)
-       - Ride-sharing services (Uber, Lyft, local equivalents)
-       - Taxi services and private drivers
-       - Bicycle rentals and bike-sharing programs
-       - Scooter and motorcycle rentals (where applicable)
-    
-    3. **Walking and Cycling Routes:**
-       - Pedestrian-friendly areas and walking tours
-       - Cycling infrastructure and bike lanes
-       - Safety considerations for walking/cycling
-       - Distance analysis for walkable destinations
-    
-    4. **Specialized Transportation:**
-       - Airport transfers and shuttle services
-       - Hotel shuttle services
-       - Tourist bus services and hop-on-hop-off options
-       - Water transportation (ferries, boats, water taxis)
-       - Cable cars, funiculars, and unique transport options
-    
-    5. **Accessibility Considerations:**
-       - Wheelchair-accessible transportation options
-       - Elevator and escalator availability at stations
-       - Audio announcements and visual displays
-       - Assistance services for travelers with disabilities
-       - Accessible taxi services
-    
-    **EVALUATION CRITERIA:**
-    - Cost-effectiveness and value for money
-    - Convenience and frequency of service
-    - Safety and reliability ratings
-    - Coverage area and connectivity
-    - Operating hours and schedule reliability
-    - Crowding levels and comfort
-    - Environmental impact and sustainability
-    - Cultural authenticity and local experience
-    - Language barriers and ease of use
-    - Payment methods and ticketing systems
-    
-    **COST ANALYSIS:**
-    - **Public Transit:** Single fares, day passes, weekly/monthly passes
-    - **Ride-sharing:** Base fares, surge pricing, tip expectations
-    - **Car Rental:** Daily rates, insurance, fuel, parking costs
-    - **Taxis:** Metered rates, airport surcharges, tip culture
-    - **Tourist Passes:** Multi-attraction transportation passes
-    - **Walking/Cycling:** Free or minimal costs
-    
-    **SAFETY ASSESSMENT:**
-    - Crime rates in transportation areas
-    - Road safety statistics and driving conditions
-    - Public transit safety during different hours
-    - Scam awareness and common tourist traps
-    - Emergency contact information
-    - Insurance requirements and recommendations
-    
-    **ACCESSIBILITY FEATURES:**
-    - Wheelchair accessibility on all transport modes
-    - Audio and visual announcements
-    - Assistance services and staff availability
-    - Elevator and escalator maintenance
-    - Accessible taxi services
-    - Service animal policies
-    
-    **SPECIAL REQUIREMENTS:**
-    - Check for any seasonal transportation changes
-    - Verify COVID-19 protocols and mask requirements
-    - Consider travel insurance for transportation
-    - Check for any local regulations or restrictions
-    - Verify payment methods and mobile app requirements
-    
+    Research local transportation in {destination} from {start_date} to {end_date}.
+    Consider: {budget}, {travelers}, {trip_type}
   expected_output: >
-    **TRANSPORTATION ANALYSIS REPORT**
-    
-    **SUMMARY:**
-    - Primary transportation hubs: [key stations, airports, terminals]
-    - Cost range: [lowest] - [highest] [currency] per day
-    - Best value options: [highlight top 3]
-    - Coverage areas: [main districts and neighborhoods served]
-    
-    **DETAILED TRANSPORTATION OPTIONS:**
-    
-    **1. PUBLIC TRANSPORTATION:**
-    
-    **Metro/Subway System:**
-    - Network coverage and key stations
-    - Operating hours and frequency
-    - Fare structure and payment methods
-    - Accessibility features and facilities
-    - Peak vs. off-peak service differences
-    - Tourist-friendly features (English signage, etc.)
-    
-    **Bus Services:**
-    - Route coverage and key destinations
-    - Frequency and reliability
-    - Fare structure and payment options
-    - Night bus services and schedules
-    - Accessibility features
-    
-    **Regional/Intercity Transport:**
-    - Train connections to nearby cities
-    - Airport express services
-    - Tourist shuttle services
-    - Booking requirements and advance purchase options
-    
-    **2. PRIVATE TRANSPORTATION:**
-    
-    **Car Rental Services:**
-    - Major rental companies and local options
-    - Vehicle types and availability
-    - Pricing structure (daily rates, insurance, fuel)
-    - Driving requirements (license, age, experience)
-    - Parking availability and costs
-    - Fuel costs and efficiency considerations
-    - GPS and navigation options
-    
-    **Ride-Sharing Services:**
-    - Available platforms (Uber, Lyft, local equivalents)
-    - Coverage areas and availability
-    - Pricing structure and surge pricing patterns
-    - Safety features and driver verification
-    - Payment methods and tipping culture
-    - Language support and communication options
-    
-    **Taxi Services:**
-    - Official taxi companies and services
-    - Metered vs. fixed pricing
-    - Airport transfer services
-    - Safety and reliability ratings
-    - Tipping expectations and cultural norms
-    - Booking apps and phone numbers
-    
-    **3. ALTERNATIVE TRANSPORTATION:**
-    
-    **Walking and Cycling:**
-    - Walkable areas and pedestrian-friendly zones
-    - Cycling infrastructure and bike lanes
-    - Bike rental services and costs
-    - Safety considerations and recommended routes
-    - Weather impact on walking/cycling
-    
-    **Water Transportation:**
-    - Ferry services and water taxis
-    - Tourist boat services
-    - Operating schedules and costs
-    - Weather-dependent service changes
-    
-    **Unique Transport Options:**
-    - Cable cars, funiculars, and gondolas
-    - Tourist buses and hop-on-hop-off services
-    - Horse-drawn carriages and traditional transport
-    - Electric scooters and micro-mobility options
-    
-    **4. TOURIST-SPECIFIC OPTIONS:**
-    
-    **Transportation Passes:**
-    - Tourist cards and multi-day passes
-    - Museum and attraction combination passes
-    - Airport transfer packages
-    - Group discounts and family packages
-    
-    **Guided Transportation:**
-    - Airport transfer services
-    - Hotel shuttle services
-    - Guided tour transportation
-    - Private driver services
-    
-    **RECOMMENDATIONS:**
-    - Best option for budget-conscious travelers
-    - Best option for families with children
-    - Best option for travelers with accessibility needs
-    - Best option for business travelers
-    - Best option for cultural immersion
-    - Best option for maximum flexibility
-    - Combination strategies for optimal experience
-    
-    **COST COMPARISON:**
-    - Daily transportation budget estimates
-    - Weekly/monthly pass value analysis
-    - Car rental vs. public transit cost comparison
-    - Tourist pass value propositions
-    - Hidden costs and additional fees
-    
-    **SAFETY AND PRACTICAL TIPS:**
-    - Peak hours to avoid
-    - Safe areas and routes
-    - Emergency contact information
-    - Common scams and how to avoid them
-    - Cultural transportation etiquette
-    - Weather considerations and backup plans
-    
-    **ACCESSIBILITY INFORMATION:**
-    - Wheelchair-accessible routes and stations
-    - Audio and visual assistance features
-    - Service animal policies
-    - Assistance services contact information
-    - Accessible taxi and private driver services
-    
-    **IMPORTANT NOTES:**
-    - Seasonal transportation changes
-    - Holiday and weekend schedule modifications
-    - Weather impact on transportation options
-    - Language barriers and communication tips
-    - Mobile app recommendations for navigation
-    - Payment method preferences and requirements
-    
+    {
+      "summary": {
+        "options": ["string"],
+        "price_range": {
+          "lowest": "string",
+          "highest": "string",
+          "currency": "string"
+        }
+      },
+      "public_transit": {
+        "types": ["string"],
+        "costs": {
+          "single": "string",
+          "day_pass": "string",
+          "weekly": "string"
+        },
+        "coverage": ["string"]
+      },
+      "private_options": {
+        "taxi": {
+          "availability": "string",
+          "costs": "string"
+        },
+        "rental": {
+          "types": ["string"],
+          "costs": "string"
+        }
+      }
+    }
   agent: travel_searcher
 
 attraction_search_task:
   description: >
-    Conduct a comprehensive attraction and activity search using multiple sources (TripAdvisor, Google Maps, local tourism boards, 
-    travel blogs, and official attraction websites) to find optimal experiences that match the user's interests and travel requirements.
-    
-    **SEARCH CRITERIA:**
-    - Destination: {destination}
-    - Travel Dates: {start_date} to {end_date}
-    - Budget: {budget}
-    - Number of Travelers: {travelers}
-    - Trip Type: {trip_type}
-    - User Interests: [from user preferences]
-    - Accessibility Requirements: [from user preferences]
-    - Time Availability: [based on itinerary constraints]
-    
-    **SEARCH STRATEGY:**
-    1. **Cultural & Historical Attractions:**
-       - Museums, galleries, and cultural centers
-       - Historical sites, monuments, and landmarks
-       - Religious sites and spiritual destinations
-       - Archaeological sites and ruins
-       - UNESCO World Heritage sites
-       - Local cultural institutions and theaters
-    
-    2. **Natural & Outdoor Attractions:**
-       - National parks and nature reserves
-       - Botanical gardens and parks
-       - Beaches, mountains, and scenic viewpoints
-       - Wildlife sanctuaries and zoos
-       - Hiking trails and outdoor activities
-       - Waterfalls, caves, and geological features
-    
-    3. **Entertainment & Recreation:**
-       - Theme parks and amusement centers
-       - Sports venues and stadiums
-       - Shopping districts and markets
-       - Entertainment districts and nightlife
-       - Family-friendly attractions and playgrounds
-       - Adventure activities and extreme sports
-    
-    4. **Local Experiences & Tours:**
-       - Guided walking tours and city tours
-       - Food tours and culinary experiences
-       - Wine tasting and brewery visits
-       - Craft workshops and hands-on experiences
-       - Photography tours and workshops
-       - Local market visits and shopping experiences
-    
-    5. **Seasonal & Special Events:**
-       - Festivals and cultural events during travel dates
-       - Seasonal attractions and activities
-       - Holiday-specific experiences
-       - Weather-dependent activities
-       - Limited-time exhibitions and shows
-    
-    6. **Accessibility & Special Needs:**
-       - Wheelchair-accessible attractions
-       - Audio guides and visual assistance
-       - Quiet spaces and sensory-friendly options
-       - Family-friendly facilities (changing rooms, nursing areas)
-       - Senior-friendly features and assistance
-       - Language support and multilingual guides
-    
-    **EVALUATION CRITERIA:**
-    - Visitor ratings and reviews (minimum 4.0+ preferred)
-    - Cultural significance and authenticity
-    - Educational value and learning opportunities
-    - Entertainment value and engagement level
-    - Photography opportunities and visual appeal
-    - Crowd levels and peak visiting times
-    - Value for money and pricing transparency
-    - Safety and security considerations
-    - Environmental impact and sustainability
-    - Local community support and authenticity
-    
-    **COST ANALYSIS:**
-    - **Free Attractions:** Public parks, viewpoints, walking areas
-    - **Low-Cost:** Local markets, public beaches, city squares
-    - **Mid-Range:** Museums, galleries, guided tours
-    - **Premium:** Theme parks, exclusive experiences, private tours
-    - **Luxury:** VIP experiences, helicopter tours, exclusive access
-    
-    **TIMING CONSIDERATIONS:**
-    - Opening hours and seasonal availability
-    - Peak visiting times and crowd management
-    - Weather-dependent activities and alternatives
-    - Advance booking requirements and time slots
-    - Duration of visits and time allocation
-    - Combination opportunities and nearby attractions
-    
-    **ACCESSIBILITY FEATURES:**
-    - Wheelchair accessibility and ramps
-    - Audio guides and visual assistance
-    - Braille signage and tactile elements
-    - Quiet rooms and sensory-friendly spaces
-    - Accessible restrooms and facilities
-    - Service animal policies and accommodations
-    
-    **FAMILY-FRIENDLY FEATURES:**
-    - Child-friendly facilities and activities
-    - Stroller accessibility and storage
-    - Nursing rooms and changing facilities
-    - Interactive exhibits and hands-on learning
-    - Safety features and child-proofing
-    - Educational programs and workshops
-    
-    **SPECIAL REQUIREMENTS:**
-    - Check for any seasonal closures or renovations
-    - Verify COVID-19 protocols and capacity limits
-    - Consider travel insurance for expensive activities
-    - Check for any local regulations or restrictions
-    - Verify booking requirements and cancellation policies
-    
+    Research attractions in {destination} for {start_date} to {end_date}.
+    Consider: {budget}, {travelers}, {trip_type}
   expected_output: >
-    **ATTRACTION SEARCH RESULTS**
-    
-    **SUMMARY:**
-    - Total attractions found: [number]
-    - Price range: Free - [highest] [currency]
-    - Top-rated attractions: [highlight top 5]
-    - Must-see experiences: [cultural/historical highlights]
-    - Hidden gems: [local favorites and off-the-beaten-path options]
-    
-    **DETAILED ATTRACTION OPTIONS (Maximum 20):**
-    
-    For each attraction, provide:
-    
-    1. **Basic Information:**
-       - Attraction name and type (museum, park, landmark, etc.)
-       - Address and location description
-       - Visitor rating and review count
-       - Cultural significance and historical background
-       - UNESCO status or special designations
-    
-    2. **Practical Details:**
-       - Opening hours and seasonal availability
-       - Admission fees and pricing structure
-       - Advance booking requirements and time slots
-       - Duration of typical visit
-       - Peak visiting times and crowd management
-       - Photography policies and restrictions
-    
-    3. **Accessibility & Amenities:**
-       - Wheelchair accessibility and facilities
-       - Audio guides and language support
-       - Restroom facilities and dining options
-       - Gift shops and souvenir availability
-       - Parking and public transport access
-       - Security and safety features
-    
-    4. **Visitor Experience:**
-       - What to expect and highlights
-       - Guided tour options and costs
-       - Interactive elements and hands-on activities
-       - Photography opportunities and best angles
-       - Quiet areas and relaxation spaces
-       - Educational programs and workshops
-    
-    5. **Family & Special Needs:**
-       - Child-friendly features and activities
-       - Stroller accessibility and storage
-       - Nursing rooms and changing facilities
-       - Sensory-friendly options and quiet spaces
-       - Educational value for different age groups
-       - Safety features and child-proofing
-    
-    6. **Logistics & Planning:**
-       - Best times to visit (avoiding crowds)
-       - Combination opportunities with nearby attractions
-       - Weather considerations and indoor alternatives
-       - Photography tips and best viewpoints
-       - Local customs and etiquette
-       - Emergency contact information
-    
-    **CATEGORIZED RECOMMENDATIONS:**
-    
-    **Cultural & Historical:**
-    - Top museums and galleries
-    - Must-see historical sites
-    - Cultural experiences and workshops
-    - Religious and spiritual sites
-    
-    **Natural & Outdoor:**
-    - Best parks and nature areas
-    - Scenic viewpoints and photo spots
-    - Hiking trails and outdoor activities
-    - Wildlife and nature experiences
-    
-    **Entertainment & Recreation:**
-    - Family-friendly attractions
-    - Nightlife and entertainment options
-    - Shopping and market experiences
-    - Adventure and extreme sports
-    
-    **Local Experiences:**
-    - Guided tours and walking experiences
-    - Food and culinary experiences
-    - Craft workshops and hands-on activities
-    - Local market and shopping experiences
-    
-    **BUDGET-FRIENDLY OPTIONS:**
-    - Free attractions and activities
-    - Low-cost experiences under [budget amount]
-    - Combination passes and discount cards
-    - Off-peak pricing and special offers
-    
-    **PREMIUM EXPERIENCES:**
-    - Exclusive access and VIP experiences
-    - Private tours and personalized services
-    - Luxury activities and helicopter tours
-    - High-end cultural experiences
-    
-    **SEASONAL & SPECIAL EVENTS:**
-    - Festivals and events during travel dates
-    - Seasonal attractions and activities
-    - Limited-time exhibitions and shows
-    - Weather-dependent activities and alternatives
-    
-    **ACCESSIBILITY HIGHLIGHTS:**
-    - Fully accessible attractions
-    - Sensory-friendly options
-    - Audio and visual assistance features
-    - Special needs accommodations
-    
-    **FAMILY-FRIENDLY HIGHLIGHTS:**
-    - Best attractions for children
-    - Interactive and educational experiences
-    - Safe and comfortable family facilities
-    - Age-appropriate activities and programs
-    
-    **IMPORTANT NOTES:**
-    - Advance booking requirements for popular attractions
-    - Peak visiting times to avoid
-    - Photography restrictions and policies
-    - Local customs and respectful behavior
-    - Weather considerations and backup plans
-    - Combination opportunities for efficiency
-    - Hidden costs and additional fees
-    
-    **FORMAT:** Present in a clear, scannable format with tables, bullet points, and highlighted key information.
-    Include photos and maps when available to help visualize the attractions.
+    {
+      "summary": {
+        "total": integer,
+        "categories": ["string"],
+        "price_range": {
+          "free": ["string"],
+          "paid": {
+            "low": "string",
+            "high": "string",
+            "currency": "string"
+          }
+        }
+      },
+      "attractions": [
+        {
+          "name": "string",
+          "type": "string",
+          "cost": "string",
+          "timing": {
+            "duration": "string",
+            "hours": "string",
+            "best_time": "string"
+          }
+        }
+      ]
+    }
   agent: travel_searcher
 
 dining_search_task:
   description: >
-    Conduct a comprehensive dining and culinary experience search using multiple sources (TripAdvisor, Yelp, Google Maps, 
-    local food blogs, Michelin guides, and restaurant websites) to find optimal dining options that match the user's 
-    preferences, dietary requirements, and budget constraints.
-    
-    **SEARCH CRITERIA:**
-    - Destination: {destination}
-    - Travel Dates: {start_date} to {end_date}
-    - Budget: {budget}
-    - Number of Travelers: {travelers}
-    - Trip Type: {trip_type}
-    - Dietary Preferences: [from user preferences]
-    - Cuisine Preferences: [from user preferences]
-    - Dining Style: [casual, fine dining, street food, etc.]
-    - Meal Times: [breakfast, lunch, dinner, snacks]
-    
-    **SEARCH STRATEGY:**
-    1. **Local Cuisine & Traditional Restaurants:**
-       - Authentic local restaurants and family-owned establishments
-       - Traditional dishes and regional specialties
-       - Historic restaurants and cultural dining experiences
-       - Street food vendors and local markets
-       - Food tours and culinary walking experiences
-       - Cooking classes and hands-on culinary experiences
-    
-    2. **International & Fusion Cuisine:**
-       - International restaurants and fusion concepts
-       - Ethnic cuisine options and authentic experiences
-       - Fine dining establishments and upscale restaurants
-       - Casual international chains and familiar options
-       - Vegetarian and vegan restaurants
-       - Halal, kosher, and religious dietary options
-    
-    3. **Specialty Dining Experiences:**
-       - Rooftop restaurants and scenic dining
-       - Underground dining and speakeasy-style venues
-       - Farm-to-table and organic restaurants
-       - Seafood restaurants and fresh catch options
-       - Wine bars and craft beer establishments
-       - Dessert cafes and specialty bakeries
-    
-    4. **Budget-Friendly Options:**
-       - Local markets and food courts
-       - Street food and food truck options
-       - Casual cafes and quick-service restaurants
-       - Student-friendly and budget-conscious options
-       - Happy hour specials and daily deals
-       - BYOB (Bring Your Own Beverage) options
-    
-    5. **Family & Group Dining:**
-       - Family-friendly restaurants with kids' menus
-       - Large group accommodations and private dining
-       - All-you-can-eat and buffet options
-       - Interactive dining experiences (teppanyaki, hot pot)
-       - Outdoor dining and garden restaurants
-       - Entertainment dining (live music, shows)
-    
-    6. **Dietary & Accessibility Considerations:**
-       - Gluten-free and celiac-friendly options
-       - Vegan and vegetarian restaurants
-       - Allergen-aware establishments
-       - Halal and kosher certified restaurants
-       - Wheelchair-accessible dining venues
-       - Quiet dining options for sensory sensitivities
-    
-    **EVALUATION CRITERIA:**
-    - Food quality and taste ratings (minimum 4.0+ preferred)
-    - Authenticity and cultural representation
-    - Value for money and portion sizes
-    - Service quality and staff friendliness
-    - Ambiance and atmosphere
-    - Cleanliness and hygiene standards
-    - Local popularity and insider recommendations
-    - Sustainability and ethical practices
-    - Innovation and culinary creativity
-    - Consistency and reliability
-    
-    **CUISINE ANALYSIS:**
-    - **Local Specialties:** Traditional dishes and regional favorites
-    - **International:** Italian, Chinese, Japanese, Indian, Mexican, etc.
-    - **Fusion:** Modern interpretations and creative combinations
-    - **Street Food:** Local snacks, quick bites, and casual options
-    - **Fine Dining:** Upscale experiences and gourmet cuisine
-    - **Casual:** Comfortable, relaxed dining atmospheres
-    
-    **PRICE RANGES:**
-    - **Budget ($):** Street food, casual cafes, food courts
-    - **Moderate ($$):** Mid-range restaurants, casual dining
-    - **Expensive ($$$):** Fine dining, upscale establishments
-    - **Luxury ($$$$):** Premium experiences, celebrity chef restaurants
-    
-    **DIETARY ACCOMMODATIONS:**
-    - **Vegetarian/Vegan:** Dedicated restaurants and menu options
-    - **Gluten-Free:** Celiac-friendly establishments
-    - **Halal/Kosher:** Religious dietary compliance
-    - **Allergen-Aware:** Nut-free, dairy-free options
-    - **Low-Sodium/Diabetic:** Health-conscious dining
-    - **Organic/Local:** Farm-to-table and sustainable options
-    
-    **DINING EXPERIENCES:**
-    - **Traditional:** Authentic local cuisine and cultural experiences
-    - **Modern:** Contemporary interpretations and fusion concepts
-    - **Interactive:** Cooking classes, food tours, hands-on experiences
-    - **Scenic:** Rooftop dining, waterfront restaurants, garden settings
-    - **Entertainment:** Live music, shows, themed dining
-    - **Educational:** Wine tastings, chef's tables, culinary workshops
-    
-    **SPECIAL REQUIREMENTS:**
-    - Check for any seasonal menu changes
-    - Verify COVID-19 protocols and capacity limits
-    - Consider travel insurance for expensive dining experiences
-    - Check for any local regulations or restrictions
-    - Verify reservation requirements and cancellation policies
-    
+    Research dining options in {destination}.
+    Consider: {budget}, {travelers}, {trip_type}
   expected_output: >
-    **DINING SEARCH RESULTS**
-    
-    **SUMMARY:**
-    - Total dining options found: [number]
-    - Price range: [lowest] - [highest] [currency] per person
-    - Top-rated restaurants: [highlight top 5]
-    - Local specialties: [must-try dishes and regional favorites]
-    - Hidden gems: [local favorites and insider recommendations]
-    
-    **DETAILED DINING OPTIONS (Maximum 25):**
-    
-    For each dining option, provide:
-    
-    1. **Basic Information:**
-       - Restaurant name and cuisine type
-       - Address and neighborhood location
-       - Visitor rating and review count
-       - Price range and cost per person
-       - Dress code and atmosphere description
-       - Awards and recognitions (Michelin, local awards)
-    
-    2. **Menu & Culinary Details:**
-       - Signature dishes and must-try items
-       - Local specialties and regional favorites
-       - Seasonal menu items and daily specials
-       - Wine list and beverage options
-       - Portion sizes and sharing recommendations
-       - Chef's background and culinary philosophy
-    
-    3. **Practical Information:**
-       - Opening hours and days of operation
-       - Reservation requirements and booking policies
-       - Walk-in availability and wait times
-       - Payment methods and tipping culture
-       - Parking and public transport access
-       - Private dining and group accommodations
-    
-    4. **Dietary Accommodations:**
-       - Vegetarian and vegan options
-       - Gluten-free and allergen-aware menus
-       - Halal and kosher certifications
-       - Customizable dishes and substitutions
-       - Allergen information and staff training
-       - Special dietary request handling
-    
-    5. **Dining Experience:**
-       - Ambiance and atmosphere description
-       - Service style and staff friendliness
-       - Table spacing and noise levels
-       - View and location highlights
-       - Entertainment and live music options
-       - Cultural authenticity and local experience
-    
-    6. **Value & Logistics:**
-       - Value for money assessment
-       - Portion sizes and sharing recommendations
-       - Happy hour specials and daily deals
-       - BYOB policies and corkage fees
-       - Delivery and takeout options
-       - Catering and private event services
-    
-    **CATEGORIZED RECOMMENDATIONS:**
-    
-    **Local & Traditional:**
-    - Authentic local restaurants
-    - Traditional dishes and regional specialties
-    - Historic dining establishments
-    - Street food and local markets
-    
-    **International & Fusion:**
-    - International cuisine options
-    - Fusion and modern interpretations
-    - Fine dining experiences
-    - Ethnic and cultural dining
-    
-    **Budget-Friendly:**
-    - Street food and casual options
-    - Local markets and food courts
-    - Happy hour specials
-    - Student-friendly establishments
-    
-    **Family & Group:**
-    - Family-friendly restaurants
-    - Large group accommodations
-    - Interactive dining experiences
-    - All-you-can-eat options
-    
-    **Specialty & Unique:**
-    - Rooftop and scenic dining
-    - Underground and speakeasy venues
-    - Farm-to-table restaurants
-    - Wine bars and craft beer
-    
-    **DIETARY-SPECIFIC OPTIONS:**
-    
-    **Vegetarian/Vegan:**
-    - Dedicated vegetarian restaurants
-    - Vegan-friendly establishments
-    - Plant-based fine dining
-    - Vegetarian street food options
-    
-    **Gluten-Free:**
-    - Celiac-friendly restaurants
-    - Gluten-free bakeries
-    - Allergen-aware establishments
-    - Customizable menu options
-    
-    **Halal/Kosher:**
-    - Certified halal restaurants
-    - Kosher dining options
-    - Religious dietary compliance
-    - Cultural dining experiences
-    
-    **MEAL-TIME RECOMMENDATIONS:**
-    
-    **Breakfast:**
-    - Local breakfast specialties
-    - Hotel breakfast options
-    - Coffee shops and cafes
-    - Breakfast markets and street food
-    
-    **Lunch:**
-    - Quick lunch options
-    - Business lunch venues
-    - Casual dining spots
-    - Lunch specials and deals
-    
-    **Dinner:**
-    - Fine dining experiences
-    - Romantic dinner venues
-    - Family dinner options
-    - Dinner shows and entertainment
-    
-    **Snacks & Desserts:**
-    - Local dessert specialties
-    - Ice cream and gelato shops
-    - Bakeries and pastry shops
-    - Street food snacks
-    
-    **CULINARY EXPERIENCES:**
-    
-    **Food Tours:**
-    - Walking food tours
-    - Market tours and tastings
-    - Wine and beer tours
-    - Cultural food experiences
-    
-    **Cooking Classes:**
-    - Hands-on cooking workshops
-    - Local cuisine classes
-    - Professional chef experiences
-    - Family cooking activities
-    
-    **Wine & Beverage:**
-    - Wine tastings and pairings
-    - Craft beer breweries
-    - Cocktail bars and mixology
-    - Local beverage specialties
-    
-    **IMPORTANT NOTES:**
-    - Peak dining times and reservation requirements
-    - Local dining customs and etiquette
-    - Tipping culture and expectations
-    - Seasonal menu changes and availability
-    - Language barriers and communication tips
-    - Photography policies and restrictions
-    - Dress codes and cultural considerations
-    
-    **FORMAT:** Present in a clear, scannable format with tables, bullet points, and highlighted key information.
-    Include photos and menu highlights when available to help visualize the dining options.
+    {
+      "summary": {
+        "total": integer,
+        "cuisines": ["string"],
+        "price_ranges": {
+          "budget": ["string"],
+          "mid": ["string"],
+          "high": ["string"]
+        }
+      },
+      "restaurants": [
+        {
+          "name": "string",
+          "cuisine": "string",
+          "price_range": "string",
+          "location": "string",
+          "highlights": ["string"]
+        }
+      ]
+    }
   agent: travel_searcher
 
-# Planning Phase
 structure_itinerary_task:
   description: >
-    Create a comprehensive, day-by-day itinerary that optimally organizes all selected activities, accommodation, 
-    and transportation while considering travel times, opening/closing hours, logical flow, and user preferences. 
-    The itinerary should maximize efficiency, minimize travel time, and create a balanced experience.
-    
-    **PLANNING CRITERIA:**
-    - Trip Duration: {start_date} to {end_date}
-    - Number of Travelers: {travelers}
-    - Trip Type: {trip_type}
-    - User Preferences: [from user profile]
-    - Accessibility Requirements: [from user preferences]
-    - Energy Level Considerations: [pace preferences]
-    
-    **PLANNING STRATEGY:**
-    1. **Temporal Organization:**
-       - **Morning Activities:** High-energy, outdoor, or cultural experiences
-       - **Afternoon Activities:** Indoor attractions, shopping, or relaxation
-       - **Evening Activities:** Dining, entertainment, or low-key experiences
-       - **Rest Periods:** Strategic breaks for meals, rest, and flexibility
-       - **Travel Time Integration:** Efficient routing between activities
-    
-    2. **Geographic Optimization:**
-       - **Proximity Clustering:** Group nearby attractions and activities
-       - **Transportation Hubs:** Plan around major transit connections
-       - **Walking Routes:** Identify pedestrian-friendly activity clusters
-       - **District Exploration:** Focus on one area per day when possible
-       - **Backtracking Minimization:** Optimize routes to reduce travel time
-    
-    3. **Activity Balance:**
-       - **Cultural vs. Recreational:** Mix of educational and entertainment activities
-       - **Indoor vs. Outdoor:** Weather-dependent activity planning
-       - **High vs. Low Energy:** Alternating intense and relaxed experiences
-       - **Group vs. Individual:** Activities suitable for all travelers
-       - **Paid vs. Free:** Budget-conscious activity distribution
-    
-    4. **Logistical Considerations:**
-       - **Opening Hours:** Schedule activities during operating times
-       - **Peak vs. Off-Peak:** Avoid crowds and optimize timing
-       - **Booking Requirements:** Advance reservations and time slots
-       - **Weather Contingencies:** Indoor alternatives for outdoor activities
-       - **Accessibility Features:** Accommodate special needs and mobility
-    
-    5. **Experience Flow:**
-       - **Progressive Intensity:** Build from lighter to more intense experiences
-       - **Cultural Immersion:** Local experiences mixed with tourist attractions
-       - **Restorative Breaks:** Strategic downtime and relaxation periods
-       - **Culinary Integration:** Meals as cultural experiences and rest periods
-       - **Evening Wind-down:** Calming activities to end each day
-    
-    **ITINERARY STRUCTURE FRAMEWORK:**
-    
-    **Daily Template:**
-    - **Morning (8:00-12:00):** High-energy activities, cultural experiences
-    - **Lunch (12:00-13:30):** Local dining, rest period
-    - **Afternoon (13:30-17:30):** Indoor attractions, shopping, relaxation
-    - **Evening (17:30-21:00):** Dinner, entertainment, low-key activities
-    - **Night (21:00+):** Optional nightlife, rest, preparation for next day
-    
-    **Weekly Rhythm:**
-    - **Day 1:** Arrival, orientation, light activities
-    - **Days 2-3:** High-energy exploration and major attractions
-    - **Day 4:** Mid-trip rest day or lighter activities
-    - **Days 5-6:** Continued exploration with varied experiences
-    - **Final Day:** Departure preparation, last-minute activities
-    
-    **ACTIVITY INTEGRATION:**
-    
-    **Must-See Attractions:** Prioritize based on:
-    - Cultural significance and historical importance
-    - User interest alignment and preferences
-    - Seasonal availability and timing
-    - Crowd levels and peak visiting times
-    - Accessibility and special needs accommodation
-    
-    **Dining Experiences:** Integrate meals as:
-    - Cultural immersion opportunities
-    - Rest periods and energy restoration
-    - Social interaction and local engagement
-    - Budget management through meal planning
-    - Dietary requirement accommodation
-    
-    **Transportation Planning:** Optimize for:
-    - Efficient route planning and minimal backtracking
-    - Public transit schedules and connections
-    - Walking distances and pedestrian accessibility
-    - Cost-effective transportation choices
-    - Accessibility features and special needs
-    
-    **SPECIAL CONSIDERATIONS:**
-    
-    **Accessibility Planning:**
-    - Wheelchair-accessible routes and venues
-    - Rest periods for travelers with mobility needs
-    - Audio and visual assistance at attractions
-    - Accessible transportation options
-    - Venue accessibility: [facility features]
-    
-    **Sensory Considerations:**
-    - Quiet spaces: [low-sensory environments]
-    - Audio assistance: [guided tours, audio guides]
-    - Visual assistance: [signage, lighting considerations]
-    - Sensory-friendly options: [accommodating venues]
-    
-    **Family-Friendly Features:**
-    - Child-appropriate activities: [age-suitable experiences]
-    - Rest periods: [bathroom breaks, snack times]
-    - Safety considerations: [child-proofing, supervision]
-    - Educational opportunities: [learning experiences]
-    
-    **OPTIMIZATION RECOMMENDATIONS:**
-    
-    **Efficiency Improvements:**
-    - Route optimizations: [suggested path improvements]
-    - Timing adjustments: [better scheduling recommendations]
-    - Activity combinations: [logical groupings]
-    - Transportation efficiency: [cost and time savings]
-    
-    **Experience Enhancements:**
-    - Premium upgrades: [worthwhile splurges]
-    - Local immersion: [authentic experiences]
-    - Cultural opportunities: [unique local experiences]
-    - Personalization: [tailored to user preferences]
-    
-    **FORMAT:** Present in a clear, scannable format with daily schedules, maps, and highlighted key information.
-    Include timing details, costs, and special instructions for each activity.
+    Create daily itinerary from {start_date} to {end_date}.
+    Consider: {travelers}, {trip_type}
   expected_output: >
-    **COMPREHENSIVE ITINERARY PLAN**
-
-    **SUMMARY:**
-    - Trip duration: [start_date] to [end_date]
-    - Number of travelers: [number]
-    - Trip type: [type]
-    - Key preferences: [summary of user preferences]
-    - Accessibility features: [summary]
-
-    **DAILY SCHEDULE (for each day):**
-    - **Morning (8:00-12:00):** [activity name, location, timing, notes]
-    - **Lunch (12:00-13:30):** [dining option, location, dietary notes]
-    - **Afternoon (13:30-17:30):** [activity name, location, timing, notes]
-    - **Evening (17:30-21:00):** [dining/entertainment, location, timing, notes]
-    - **Night (21:00+):** [optional activities, rest, notes]
-
-    **LOGISTICS:**
-    - Accommodation details: [hotel name, address, check-in/out, amenities]
-    - Transportation plan: [routes, modes, timing, accessibility]
-    - Booking requirements: [advance reservations, tickets, confirmations]
-    - Rest periods: [scheduled breaks, flexibility]
-
-    **OPTIMIZATION & RECOMMENDATIONS:**
-    - Route and timing optimizations: [suggested improvements]
-    - Activity combinations: [logical groupings]
-    - Experience enhancements: [local immersion, premium upgrades]
-    - Contingency plans: [weather, accessibility, alternatives]
-
-    **SPECIAL CONSIDERATIONS:**
-    - Accessibility: [wheelchair routes, sensory-friendly options]
-    - Family-friendly features: [child-appropriate activities, safety]
-    - Dietary accommodations: [meal planning, restrictions]
-    - Budget management: [cost breakdown, savings tips]
-
-    **FORMAT:**  
-    Present the itinerary in a clear, scannable format with daily schedules, tables, maps, and highlighted key information.  
-    Include timing details, costs, and special instructions for each activity.  
-    Use visual elements (icons, color coding) for accessibility and clarity.
+    {
+      "summary": {
+        "days": integer,
+        "highlights": ["string"]
+      },
+      "days": [
+        {
+          "date": "string",
+          "activities": [
+            {
+              "time": "string",
+              "type": "string",
+              "details": "string",
+              "duration": "string"
+            }
+          ]
+        }
+      ]
+    }
   agent: itinerary_planner
 
-# Quality Assurance Phase
 validate_itinerary_task:
   description: >
-    Conduct a comprehensive validation review of the complete itinerary to ensure feasibility, completeness, 
-    and perfect alignment with user requirements. Verify that all components work together seamlessly and 
-    identify any issues, gaps, or improvements needed for an optimal travel experience.
-    
-    **VALIDATION CRITERIA:**
-    - Trip Duration: {start_date} to {end_date}
-    - User Requirements: [from user profile and preferences]
-    - Budget Constraints: {budget}
-    - Accessibility Needs: [from user preferences]
-    - Group Size: {travelers}
-    - Trip Type: {trip_type}
-    
-    **VALIDATION STRATEGY:**
-    1. **Completeness Assessment:**
-       - **Essential Components:** All required elements present and accounted for
-       - **Logical Flow:** Activities arranged in sensible, efficient order
-       - **Time Allocation:** Appropriate time distribution across activities
-       - **Rest Periods:** Adequate breaks and recovery time included
-       - **Contingency Plans:** Backup options for all critical activities
-    
-    2. **Feasibility Verification:**
-       - **Timing Accuracy:** Realistic travel times and activity durations
-       - **Opening Hours:** Activities scheduled during operating times
-       - **Booking Requirements:** Advance reservations confirmed where needed
-       - **Accessibility Compliance:** All venues accessible for user needs
-       - **Weather Considerations:** Outdoor activities have indoor alternatives
-    
-    3. **User Requirement Alignment:**
-       - **Interest Match:** Activities align with user's stated interests
-       - **Budget Compliance:** Total cost within specified budget
-       - **Accessibility Support:** All venues accommodate special needs
-       - **Dietary Accommodation:** Dining options meet dietary requirements
-       - **Travel Style:** Experience matches preferred travel style
-    
-    4. **Integration Quality:**
-       - **Transportation Coordination:** Efficient routing between activities
-       - **Accommodation Integration:** Hotel location supports daily activities
-       - **Dining Coordination:** Meals planned around activity schedules
-       - **Activity Balance:** Mix of cultural, recreational, and relaxation
-       - **Pace Management:** Appropriate energy level distribution
-    
-    5. **Risk Assessment:**
-       - **Weather Vulnerabilities:** Outdoor activities with weather exposure
-       - **Booking Dependencies:** Activities requiring advance reservations
-       - **Accessibility Gaps:** Venues with potential accessibility issues
-       - **Budget Risks:** Areas where costs might exceed expectations
-       - **Timing Pressures:** Tight schedules with minimal buffer time
-    
-    **VALIDATION FRAMEWORK:**
-    
-    **Daily Validation Checklist:**
-    - **Morning Activities:** [feasibility, timing, accessibility]
-    - **Lunch Planning:** [dining options, dietary compliance, timing]
-    - **Afternoon Activities:** [logistics, accessibility, weather considerations]
-    - **Evening Activities:** [safety, accessibility, group suitability]
-    - **Transportation:** [efficiency, accessibility, cost-effectiveness]
-    
-    **Component Integration Analysis:**
-    - **Activity-Activity Flow:** [logical progression, efficient routing]
-    - **Activity-Transportation:** [optimal transportation choices]
-    - **Activity-Accommodation:** [location convenience, accessibility]
-    - **Activity-Dining:** [meal timing, dietary compliance, cost]
-    - **Activity-Weather:** [weather-dependent planning, alternatives]
-    
-    **User Preference Verification:**
-    - **Interest Alignment:** [percentage match with user interests]
-    - **Budget Compliance:** [cost analysis vs. budget constraints]
-    - **Accessibility Support:** [percentage of venues supporting special needs]
-    - **Dietary Accommodation:** [restaurant dietary option verification]
-    - **Travel Style Match:** [percentage of experiences matching preferred style]
-    
-    **QUALITY METRICS:**
-    
-    **Completeness Score:**
-    - **Essential Elements:** [percentage of required components included]
-    - **Logical Flow:** [percentage of activities in optimal order]
-    - **Time Allocation:** [percentage of time appropriately distributed]
-    - **Rest Integration:** [percentage of adequate rest periods included]
-    - **Contingency Coverage:** [percentage of activities with backup plans]
-    
-    **Feasibility Score:**
-    - **Timing Accuracy:** [percentage of realistic time estimates]
-    - **Opening Hours:** [percentage of activities during operating times]
-    - **Booking Compliance:** [percentage of required bookings confirmed]
-    - **Accessibility Compliance:** [percentage of venues fully accessible]
-    - **Weather Resilience:** [percentage of weather-dependent activities with alternatives]
-    
-    **User Alignment Score:**
-    - **Interest Match:** [percentage of activities matching user interests]
-    - **Budget Compliance:** [percentage within budget constraints]
-    - **Accessibility Support:** [percentage of venues supporting special needs]
-    - **Dietary Accommodation:** [percentage of dining options meeting requirements]
-    - **Travel Style Match:** [percentage of experiences matching preferred style]
-    
+    Validate complete itinerary for {start_date} to {end_date}.
+    Consider: {budget}, {travelers}, {trip_type}
   expected_output: >
-    **COMPREHENSIVE ITINERARY VALIDATION REPORT**
-    
-    **EXECUTIVE SUMMARY:**
-    - Overall validation score: [percentage] (Excellent/Good/Fair/Needs Improvement)
-    - Completeness score: [percentage] of required elements included
-    - Feasibility score: [percentage] of realistic and achievable plans
-    - User alignment score: [percentage] matching user requirements
-    - Risk assessment: [Low/Medium/High] risk level
-    
-    **COMPLETENESS ASSESSMENT:**
-    
-    **Essential Components Verification:**
-    - **Transportation:** [✓/✗] All flights, local transit, and transfers included
-    - **Accommodation:** [✓/✗] Hotel bookings, check-in/out times, amenities
-    - **Activities:** [✓/✗] All planned attractions, tours, and experiences
-    - **Dining:** [✓/✗] Meal planning, reservations, dietary accommodations
-    - **Contingency Plans:** [✓/✗] Backup options for critical activities
-    
-    **Logical Flow Analysis:**
-    - **Geographic Efficiency:** [✓/✗] Activities grouped by proximity
-    - **Temporal Logic:** [✓/✗] Activities arranged in optimal time sequence
-    - **Energy Management:** [✓/✗] High and low energy activities balanced
-    - **Rest Integration:** [✓/✗] Adequate breaks and recovery periods
-    - **Transportation Coordination:** [✓/✗] Efficient routing between activities
-    
-    **Time Allocation Review:**
-    - **Activity Duration:** [✓/✗] Realistic time estimates for all activities
-    - **Travel Time:** [✓/✗] Accurate transportation time calculations
-    - **Rest Periods:** [✓/✗] Sufficient breaks and meal times
-    - **Buffer Time:** [✓/✗] Adequate flexibility for delays and changes
-    - **Evening Activities:** [✓/✗] Appropriate evening entertainment options
-    
-    **FEASIBILITY VERIFICATION:**
-    
-    **Timing Accuracy:**
-    - **Opening Hours:** [✓/✗] All activities scheduled during operating times
-    - **Peak Hours:** [✓/✗] Crowd management and timing optimization
-    - **Booking Windows:** [✓/✗] Advance reservations where required
-    - **Seasonal Considerations:** [✓/✗] Activities appropriate for travel dates
-    - **Local Events:** [✓/✗] No conflicts with major local events
-    
-    **Accessibility Compliance:**
-    - **Wheelchair Access:** [✓/✗] All venues wheelchair accessible
-    - **Sensory Support:** [✓/✗] Audio/visual assistance available
-    - **Medical Accommodations:** [✓/✗] Healthcare access and medication storage
-    - **Communication Support:** [✓/✗] Language assistance and translation
-    - **Emergency Access:** [✓/✗] Emergency services and medical facilities
-    
-    **Weather Resilience:**
-    - **Outdoor Activities:** [✓/✗] Indoor alternatives for weather-dependent activities
-    - **Transportation Impact:** [✓/✗] Weather-affected transit alternatives
-    - **Seasonal Planning:** [✓/✗] Activities appropriate for seasonal weather
-    - **Emergency Protocols:** [✓/✗] Weather emergency procedures in place
-    - **Flexible Scheduling:** [✓/✗] Adjustable timing for weather changes
-    
-    **USER REQUIREMENT ALIGNMENT:**
-    
-    **Interest Match Analysis:**
-    - **Cultural Interests:** [✓/✗] [number] activities matching cultural preferences
-    - **Adventure Preferences:** [✓/✗] [number] activities for adventure seekers
-    - **Relaxation Focus:** [✓/✗] [number] activities for relaxation
-    - **Food Enthusiasm:** [✓/✗] [number] culinary experiences included
-    - **Entertainment:** [✓/✗] [number] entertainment and nightlife options
-    
-    **Budget Compliance:**
-    - **Total Cost:** [amount] vs. budget of [amount] ([percentage] utilization)
-    - **Transportation Costs:** [amount] ([percentage] of total)
-    - **Accommodation Costs:** [amount] ([percentage] of total)
-    - **Activity Costs:** [amount] ([percentage] of total)
-    - **Dining Costs:** [amount] ([percentage] of total)
-    - **Emergency Fund:** [amount] remaining for unexpected expenses
-    
-    **Accessibility Support:**
-    - **Mobility Accommodations:** [✓/✗] All venues wheelchair accessible
-    - **Sensory Accommodations:** [✓/✗] Audio/visual assistance available
-    - **Cognitive Support:** [✓/✗] Clear signage and simple navigation
-    - **Medical Accommodations:** [✓/✗] Healthcare access and medication storage
-    - **Communication Support:** [✓/✗] Language assistance and translation
-    
-    **Dietary Accommodation:**
-    - **Allergy Support:** [✓/✗] Nut-free, gluten-free, dairy-free options
-    - **Religious Requirements:** [✓/✗] Halal, kosher, vegetarian options
-    - **Health Considerations:** [✓/✗] Low-sodium, diabetic-friendly options
-    - **Cultural Preferences:** [✓/✗] Local vs. international cuisine balance
-    - **Meal Timing:** [✓/✗] Flexible dining schedules and advance reservations
-    
-    **INTEGRATION QUALITY ASSESSMENT:**
-    
-    **Transportation Coordination:**
-    - **Route Efficiency:** [✓/✗] Optimal routing between activities
-    - **Timing Accuracy:** [✓/✗] Realistic travel time estimates
-    - **Cost Effectiveness:** [✓/✗] Most cost-effective transportation choices
-    - **Accessibility:** [✓/✗] Accessible transportation options available
-    - **Backup Options:** [✓/✗] Alternative transportation if needed
-    
-    **Accommodation Integration:**
-    - **Location Convenience:** [✓/✗] Hotel location supports daily activities
-    - **Accessibility Features:** [✓/✗] Hotel accommodates special needs
-    - **Amenity Support:** [✓/✗] Hotel amenities support planned activities
-    - **Check-in/out Timing:** [✓/✗] Arrival/departure timing works with itinerary
-    - **Group Accommodation:** [✓/✗] Hotel suitable for group size and needs
-    
-    **Activity Balance:**
-    - **Cultural vs. Recreational:** [✓/✗] Good mix of educational and entertainment
-    - **Indoor vs. Outdoor:** [✓/✗] Weather-appropriate activity distribution
-    - **High vs. Low Energy:** [✓/✗] Balanced energy level distribution
-    - **Paid vs. Free:** [✓/✗] Budget-conscious activity distribution
-    - **Local vs. Tourist:** [✓/✗] Authentic local experiences included
-    
-    **RISK ASSESSMENT:**
-    
-    **High-Risk Areas:**
-    - **Weather Vulnerabilities:** [list of weather-dependent activities]
-    - **Booking Dependencies:** [activities requiring advance reservations]
-    - **Accessibility Gaps:** [venues with potential accessibility issues]
-    - **Budget Risks:** [areas where costs might exceed expectations]
-    - **Timing Pressures:** [tight schedules with minimal buffer time]
-    
-    **Risk Mitigation:**
-    - **Weather Contingencies:** [indoor alternatives for outdoor activities]
-    - **Booking Backups:** [alternative venues if reservations unavailable]
-    - **Accessibility Alternatives:** [backup venues with better accessibility]
-    - **Budget Flexibility:** [cost-cutting options if budget exceeded]
-    - **Timing Adjustments:** [flexible scheduling for delays and changes]
-    
-    **RECOMMENDATIONS:**
-    
-    **Immediate Improvements:**
-    - [specific changes needed for better feasibility]
-    - [adjustments for better user alignment]
-    - [enhancements for accessibility compliance]
-    - [optimizations for budget efficiency]
-    - [improvements for risk mitigation]
-    
-    **Quality Enhancements:**
-    - [premium upgrades worth considering]
-    - [additional activities that enhance experience]
-    - [alternative venues with better features]
-    - [timing adjustments for optimal experience]
-    - [contingency plan improvements]
-    
-    **FORMAT:** Present in a clear, scannable format with validation checklists, 
-    risk assessment matrices, and improvement recommendations.
-    Include visual validation scores and quality metrics.
+    {
+      "validation": {
+        "score": float,
+        "issues": ["string"],
+        "recommendations": ["string"]
+      },
+      "checks": {
+        "timing": boolean,
+        "budget": boolean,
+        "feasibility": boolean
+      }
+    }
   agent: quality_assurance
 
 budget_final_check_task:
   description: >
-    Perform a comprehensive final budget verification to ensure the complete trip stays within budget constraints 
-    while maintaining quality and meeting all user requirements. Conduct detailed cost analysis, identify any 
-    overruns, and provide optimization recommendations to achieve budget compliance.
-    
-    **BUDGET VERIFICATION CRITERIA:**
-    - Total Budget: {budget}
-    - Trip Duration: {start_date} to {end_date}
-    - Number of Travelers: {travelers}
-    - Budget Priority: [from user preferences]
-    - Quality Threshold: [minimum acceptable standards]
-    - Emergency Fund: [recommended reserve amount]
-    
-    **VERIFICATION STRATEGY:**
-    1. **Comprehensive Cost Analysis:**
-       - **Transportation Costs:** Flights, local transit, transfers, parking
-       - **Accommodation Costs:** Hotels, taxes, fees, additional services
-       - **Activity Costs:** Entrance fees, tours, experiences, equipment rental
-       - **Dining Costs:** Meals, beverages, tips, special dining experiences
-       - **Incidental Costs:** Souvenirs, shopping, entertainment, personal care
-    
-    2. **Budget Allocation Verification:**
-       - **Category Breakdown:** Percentage allocation across all expense categories
-       - **Daily Spending:** Cost per day and per person analysis
-       - **Priority Spending:** Alignment with user's budget priorities
-       - **Quality Investment:** Premium experiences vs. budget options
-       - **Emergency Reserve:** Adequate funds for unexpected expenses
-    
-    3. **Cost Optimization Assessment:**
-       - **Savings Opportunities:** Areas where costs can be reduced
-       - **Value Analysis:** Cost-benefit ratios for all major expenses
-       - **Alternative Options:** Lower-cost alternatives that maintain quality
-       - **Package Deals:** Bundled savings opportunities
-       - **Timing Optimizations:** Off-peak pricing and advance booking savings
-    
-    4. **Risk Assessment:**
-       - **Currency Fluctuations:** Exchange rate impact on costs
-       - **Seasonal Variations:** Peak vs. off-peak pricing differences
-       - **Hidden Costs:** Additional fees and charges not initially included
-       - **Emergency Expenses:** Medical, cancellation, or replacement costs
-       - **Overrun Probability:** Likelihood of exceeding budget in each category
-    
-    5. **Compliance Verification:**
-       - **Budget Limits:** Total cost vs. specified budget
-       - **Quality Standards:** Minimum acceptable experience quality
-       - **User Preferences:** Alignment with budget priorities
-       - **Group Considerations:** Multi-traveler cost implications
-       - **Timeline Constraints:** Booking deadlines and payment schedules
-    
-    **BUDGET VERIFICATION FRAMEWORK:**
-    
-    **Detailed Cost Breakdown:**
-    - **Transportation:** [amount] ([percentage] of total budget)
-    - **Accommodation:** [amount] ([percentage] of total budget)
-    - **Activities:** [amount] ([percentage] of total budget)
-    - **Dining:** [amount] ([percentage] of total budget)
-    - **Incidentals:** [amount] ([percentage] of total budget)
-    - **Emergency Fund:** [amount] ([percentage] of total budget)
-    
-    **Cost Efficiency Analysis:**
-    - **High Value:** [categories providing excellent value for money]
-    - **Moderate Value:** [categories with reasonable cost-benefit ratios]
-    - **Low Value:** [categories with potential for optimization]
-    - **Overpriced:** [categories exceeding typical market rates]
-    
-    **Budget Risk Assessment:**
-    - **High Risk:** [categories likely to exceed budget]
-    - **Medium Risk:** [categories with moderate overrun potential]
-    - **Low Risk:** [categories likely to stay within budget]
-    - **Fixed Costs:** [non-negotiable expenses]
-    - **Variable Costs:** [flexible expenses that can be adjusted]
-    
+    Verify budget compliance for complete trip plan.
+    Consider: {budget}, {travelers}, {trip_type}
   expected_output: >
-    **FINAL BUDGET VERIFICATION REPORT**
-    
-    **EXECUTIVE SUMMARY:**
-    - Total trip cost: [amount] [currency]
-    - Budget utilization: [percentage] of total budget
-    - Available budget: [remaining amount]
-    - Budget status: [Under/Over/On target]
-    - Emergency fund: [amount] remaining for unexpected expenses
-    
-    **DETAILED COST BREAKDOWN:**
-    
-    **1. TRANSPORTATION COSTS:**
-    - **Flights:** [amount] ([percentage] of total)
-      * Outbound: [airline, cost, class, confirmation]
-      * Return: [airline, cost, class, confirmation]
-      * Airport transfers: [amount]
-      * Baggage fees: [amount]
-    - **Local Transportation:** [amount] ([percentage] of total)
-      * Public transit passes: [amount]
-      * Ride-sharing services: [amount]
-      * Car rental (if applicable): [amount]
-      * Parking and fuel: [amount]
-    
-    **2. ACCOMMODATION COSTS:**
-    - **Hotel/Rental:** [amount] ([percentage] of total)
-      * Base rate: [amount]
-      * Taxes and fees: [amount]
-      * Resort fees: [amount]
-      * Security deposits: [amount]
-    - **Additional Costs:**
-      * Early check-in/late check-out: [amount]
-      * Room upgrades: [amount]
-      * Additional guests: [amount]
-    
-    **3. ACTIVITIES AND ATTRACTIONS:**
-    - **Entrance Fees:** [amount] ([percentage] of total)
-      * Museums and galleries: [amount]
-      * Theme parks and attractions: [amount]
-      * Guided tours: [amount]
-      * Special experiences: [amount]
-    - **Activity Costs:**
-      * Adventure activities: [amount]
-      * Cultural experiences: [amount]
-      * Entertainment: [amount]
-    
-    **4. DINING EXPENSES:**
-    - **Meals:** [amount] ([percentage] of total)
-      * Breakfast: [amount] per day
-      * Lunch: [amount] per day
-      * Dinner: [amount] per day
-      * Snacks and beverages: [amount] per day
-    - **Dining Experiences:**
-      * Fine dining: [amount]
-      * Food tours: [amount]
-      * Cooking classes: [amount]
-      * Tips and service charges: [amount]
-    
-    **5. INCIDENTAL EXPENSES:**
-    - **Shopping and Souvenirs:** [amount] ([percentage] of total)
-    - **Entertainment:** [amount]
-    - **Personal Care:** [amount]
-    - **Communication:** [amount] (SIM cards, WiFi)
-    - **Emergency Fund:** [amount] (recommended)
-    
-    **6. INSURANCE AND PROTECTION:**
-    - **Travel Insurance:** [amount] ([percentage] of total)
-    - **Health Coverage:** [amount]
-    - **Trip Protection:** [amount]
-    - **Cancellation Coverage:** [amount]
-    
-    **BUDGET ALLOCATION ANALYSIS:**
-    
-    **Category Breakdown:**
-    - Transportation: [percentage]% ([amount])
-    - Accommodation: [percentage]% ([amount])
-    - Activities: [percentage]% ([amount])
-    - Dining: [percentage]% ([amount])
-    - Incidentals: [percentage]% ([amount])
-    - Insurance: [percentage]% ([amount])
-    - Emergency Fund: [percentage]% ([amount])
-    
-    **Cost Efficiency Assessment:**
-    - **High Value:** [categories providing excellent value for money]
-    - **Moderate Value:** [categories with reasonable cost-benefit ratios]
-    - **Low Value:** [categories with potential for optimization]
-    - **Overpriced:** [categories exceeding typical market rates]
-    
-    **Daily Cost Analysis:**
-    - **Cost per person per day:** [amount]
-    - **Cost per person for trip:** [amount]
-    - **Daily budget allocation:** [amount] per day
-    - **Splurge days:** [days with premium experiences]
-    - **Budget-friendly days:** [days with cost-effective activities]
-    
-    **BUDGET COMPLIANCE VERIFICATION:**
-    
-    **Budget Status:**
-    - **Total Budget:** [amount] [currency]
-    - **Total Cost:** [amount] [currency]
-    - **Budget Utilization:** [percentage]%
-    - **Remaining Budget:** [amount] [currency]
-    - **Budget Status:** [Under/Over/On target]
-    
-    **Quality Compliance:**
-    - **Minimum Quality Standards:** [✓/✗] All experiences meet minimum standards
-    - **Premium Experiences:** [✓/✗] Worthwhile splurges included
-    - **Value for Money:** [✓/✗] Good cost-benefit ratios achieved
-    - **User Satisfaction:** [✓/✗] Experiences align with user preferences
-    - **Group Considerations:** [✓/✗] Costs appropriate for group size
-    
-    **RISK ASSESSMENT:**
-    
-    **Budget Risks:**
-    - **High Risk:** [categories likely to exceed budget]
-    - **Medium Risk:** [categories with moderate overrun potential]
-    - **Low Risk:** [categories likely to stay within budget]
-    - **Currency Fluctuations:** [exchange rate impact on costs]
-    - **Hidden Costs:** [additional fees and charges identified]
-    
-    **Risk Mitigation:**
-    - **Emergency Fund:** [amount] reserved for unexpected expenses
-    - **Flexible Expenses:** [areas where costs can be reduced if needed]
-    - **Alternative Options:** [backup plans for cost overruns]
-    - **Insurance Coverage:** [travel insurance for unexpected costs]
-    - **Payment Flexibility:** [flexible payment options available]
-    
-    **OPTIMIZATION RECOMMENDATIONS:**
-    
-    **Immediate Savings:**
-    - [specific cost-cutting recommendations with dollar amounts]
-    - [alternative options with cost comparisons]
-    - [timing adjustments for better pricing]
-    - [package deals and bundled savings]
-    
-    **Quality Preservation:**
-    - [areas where quality should not be compromised]
-    - [premium experiences worth the investment]
-    - [splurge recommendations within budget]
-    - [value-added experiences to consider]
-    
-    **Budget Adjustments:**
-    - [category reallocation suggestions]
-    - [priority spending recommendations]
-    - [emergency fund adjustments]
-    - [payment timing optimizations]
-    
-    **FINAL RECOMMENDATIONS:**
-    
-    **Budget Compliance:**
-    - [✓/✗] Trip stays within budget constraints
-    - [✓/✗] Quality standards maintained
-    - [✓/✗] User preferences accommodated
-    - [✓/✗] Emergency fund adequate
-    - [✓/✗] Payment schedule feasible
-    
-    **Optimization Opportunities:**
-    - [specific recommendations for cost savings]
-    - [quality enhancement suggestions]
-    - [timing optimization proposals]
-    - [package deal opportunities]
-    - [loyalty program benefits]
-    
-    **FORMAT:** Present in a clear, scannable format with cost breakdowns, 
-    budget compliance checklists, and optimization recommendations.
-    Include visual budget charts and cost comparison tables.
+    {
+      "summary": {
+        "total": "string",
+        "remaining": "string",
+        "status": "string"
+      },
+      "breakdown": {
+        "transport": "string",
+        "accommodation": "string",
+        "activities": "string",
+        "dining": "string",
+        "other": "string"
+      }
+    }
   agent: budget_manager
-
 
 create_travel_document_task:
   description: >
-    Compile all gathered information into a comprehensive, professional, and user-friendly travel document that serves as the complete reference guide for the trip. This document should be the single source of truth containing all essential information, practical details, and helpful resources that the traveler needs before, during, and after their journey.
-    
-    **DOCUMENT REQUIREMENTS:**
-    - Consolidate all research, bookings, and planning information
-    - Organize information in logical, easy-to-navigate sections
-    - Include all practical details for smooth travel execution
-    - Provide emergency contacts and safety information
-    - Include helpful tips and local insights
-    - Ensure all information is accurate, up-to-date, and verified
-    - Create a document that works both digitally and when printed
-    
-    **CONTENT INTEGRATION:**
-    - Destination research and local insights
-    - Flight details and transportation information
-    - Accommodation bookings and property details
-    - Complete daily itinerary with timing and logistics
-    - Activity bookings and reservation confirmations
-    - Dining recommendations and dietary accommodations
-    - Budget breakdown and payment information
-    - Safety information and emergency procedures
-    - Local customs and cultural guidelines
-    - Packing recommendations and weather information
-    
-    **DOCUMENT STRUCTURE:**
-    1. **Executive Summary** - Trip overview and key highlights
-    2. **Essential Information** - Critical details for travel preparation
-    3. **Detailed Itinerary** - Day-by-day breakdown with all activities
-    4. **Booking Confirmations** - All reservation details and confirmations
-    5. **Practical Information** - Transportation, accommodation, and logistics
-    6. **Local Insights** - Cultural information, tips, and recommendations
-    7. **Safety & Emergency** - Health, security, and emergency procedures
-    8. **Budget & Payments** - Cost breakdown and payment schedules
-    9. **Packing & Preparation** - Weather-based packing recommendations
-    10. **Contact Information** - All relevant contact details and support
-    
-    **QUALITY STANDARDS:**
-    - All information must be verified and accurate
-    - Contact details must be current and functional
-    - Pricing information must be up-to-date
-    - Emergency procedures must be comprehensive
-    - Cultural information must be respectful and accurate
-    - Accessibility information must be detailed and verified
-    - Weather information must be seasonally appropriate
-    - Local recommendations must be current and relevant
-    
+    Create comprehensive travel document with all trip details.
+    Consider: {start_date}, {end_date}, {travelers}, {trip_type}
   expected_output: >
-    **COMPREHENSIVE TRAVEL DOCUMENT**
-    
-    **DOCUMENT METADATA:**
-    - Document Version: [version number]
-    - Last Updated: [date and time]
-    - Trip Reference: [unique identifier]
-    - Prepared For: [traveler names]
-    - Destination: [destination name]
-    - Travel Dates: [start date] to [end date]
-    - Document Status: [Final/Review Required/Updates Pending]
-    
-    **1. EXECUTIVE SUMMARY**
-    
-    **Trip Overview:**
-    - **Destination:** [destination name and country]
-    - **Duration:** [number] days, [start date] to [end date]
-    - **Travelers:** [names and special requirements]
-    - **Trip Type:** [leisure/business/family/adventure/etc.]
-    - **Total Budget:** [amount] [currency]
-    - **Budget Status:** [Under/On/Over budget by [amount]]
-    
-    **Key Highlights:**
-    - **Must-See Attractions:** [top 3-5 highlights]
-    - **Unique Experiences:** [special activities or cultural experiences]
-    - **Best Value:** [cost-effective highlights]
-    - **Splurge Moments:** [premium experiences worth the investment]
-    - **Local Gems:** [off-the-beaten-path recommendations]
-    
-    **Trip Rating:**
-    - **Overall Experience:** [Excellent/Good/Fair] ([percentage]% match to preferences)
-    - **Budget Efficiency:** [Excellent/Good/Fair] ([percentage]% budget utilization)
-    - **Accessibility:** [Excellent/Good/Fair] ([percentage]% accessibility compliance)
-    - **Cultural Immersion:** [Excellent/Good/Fair] ([percentage]% local experience)
-    - **Safety & Security:** [Excellent/Good/Fair] ([percentage]% safety coverage)
-    
-    **2. ESSENTIAL INFORMATION**
-    
-    **Travel Documents:**
-    - **Passport Requirements:** [validity period and pages needed]
-    - **Visa Information:** [requirements, application process, fees]
-    - **Health Requirements:** [vaccinations, COVID-19 protocols, health insurance]
-    - **Travel Insurance:** [coverage details, policy number, emergency contacts]
-    - **Entry Requirements:** [arrival procedures, customs regulations]
-    
-    **Emergency Contacts:**
-    - **Local Emergency:** [emergency services numbers]
-    - **Embassy/Consulate:** [contact details for home country representation]
-    - **Travel Insurance:** [24/7 emergency assistance number]
-    - **Local Support:** [tour guide, hotel, or local contact information]
-    - **Medical Facilities:** [hospitals, clinics, pharmacies with addresses]
-    
-    **Weather & Climate:**
-    - **Expected Weather:** [temperature range, precipitation, humidity]
-    - **Seasonal Considerations:** [monsoon, hurricane, allergy seasons]
-    - **Packing Recommendations:** [clothing, accessories, gear needed]
-    - **Weather Alerts:** [current weather warnings or advisories]
-    
-    **3. DETAILED ITINERARY**
-    
-    **Day-by-Day Breakdown:**
-    
-    For each day, provide:
-    - **Date:** [day of week, date]
-    - **Theme:** [cultural day, adventure day, relaxation day, etc.]
-    - **Weather Forecast:** [temperature, conditions, UV index]
-    - **Key Activities:** [main attractions and experiences]
-    - **Transportation:** [how to get between activities]
-    - **Meals:** [dining recommendations and reservations]
-    - **Budget:** [daily cost breakdown]
-    - **Notes:** [special considerations, tips, or warnings]
-    
-    **Daily Schedule Template:**
-    ```
-    **DAY [X]: [Day Name]**
-    
-    **Weather:** [forecast] | **Budget:** [amount] | **Theme:** [theme]
-    
-    **Morning:**
-    - [time] - [activity] ([duration], [cost])
-    - [time] - [transportation] ([duration], [cost])
-    - [time] - [meal] ([location], [cost])
-    
-    **Afternoon:**
-    - [time] - [activity] ([duration], [cost])
-    - [time] - [transportation] ([duration], [cost])
-    - [time] - [meal] ([location], [cost])
-    
-    **Evening:**
-    - [time] - [activity] ([duration], [cost])
-    - [time] - [transportation] ([duration], [cost])
-    - [time] - [meal] ([location], [cost])
-    
-    **Notes:** [special considerations, tips, or warnings]
-    **Backup Plans:** [alternative activities if weather or other issues arise]
-    ```
-    
-    **4. BOOKING CONFIRMATIONS**
-    
-    **Flight Information:**
-    - **Outbound Flight:** [airline, flight number, departure/arrival times]
-    - **Return Flight:** [airline, flight number, departure/arrival times]
-    - **Booking Reference:** [confirmation numbers]
-    - **Check-in:** [online check-in times, requirements]
-    - **Baggage:** [allowances, fees, restrictions]
-    - **Seat Assignments:** [seat numbers, upgrade options]
-    - **Special Services:** [wheelchair, meal preferences, etc.]
-    
-    **Accommodation Details:**
-    - **Property Name:** [hotel/resort/rental name]
-    - **Address:** [full address with postal code]
-    - **Check-in/Check-out:** [times and procedures]
-    - **Room Type:** [room description and amenities]
-    - **Booking Reference:** [confirmation number]
-    - **Contact Information:** [phone, email, website]
-    - **Amenities:** [WiFi, pool, gym, restaurant, etc.]
-    - **Special Requests:** [early check-in, late check-out, accessibility]
-    
-    **Activity Bookings:**
-    - **Tour/Activity Name:** [activity description]
-    - **Date & Time:** [scheduled time and duration]
-    - **Meeting Point:** [location and directions]
-    - **Booking Reference:** [confirmation number]
-    - **Contact Information:** [tour operator details]
-    - **What to Bring:** [required items, clothing, equipment]
-    - **Cancellation Policy:** [refund terms and conditions]
-    
-    **Restaurant Reservations:**
-    - **Restaurant Name:** [name and cuisine type]
-    - **Date & Time:** [reservation time]
-    - **Address:** [location and directions]
-    - **Booking Reference:** [confirmation number]
-    - **Special Requests:** [dietary requirements, seating preferences]
-    - **Dress Code:** [attire requirements]
-    - **Contact Information:** [phone number for changes]
-    
-    **5. PRACTICAL INFORMATION**
-    
-    **Transportation:**
-    - **Airport Transfers:** [options, costs, booking details]
-    - **Local Transportation:** [public transit, taxis, ride-sharing]
-    - **Car Rentals:** [if applicable, details and insurance]
-    - **Walking Routes:** [safe walking paths and areas to avoid]
-    - **Transportation Cards:** [passes, tickets, payment methods]
-    
-    **Accommodation Logistics:**
-    - **Check-in Procedures:** [required documents, payment methods]
-    - **Room Access:** [key cards, security procedures]
-    - **Housekeeping:** [schedule, special requests]
-    - **Laundry Services:** [on-site or nearby options]
-    - **Storage:** [luggage storage, safe usage]
-    
-    **Communication:**
-    - **Local SIM Cards:** [purchase locations and costs]
-    - **WiFi Access:** [hotel, cafes, public WiFi locations]
-    - **International Calling:** [rates and options]
-    - **Language Support:** [translation apps, local language basics]
-    - **Emergency Communication:** [how to contact home in emergencies]
-    
-    **6. LOCAL INSIGHTS**
-    
-    **Cultural Information:**
-    - **Local Customs:** [greetings, dress codes, behavior expectations]
-    - **Tipping Practices:** [when and how much to tip]
-    - **Language Basics:** [essential phrases and pronunciation]
-    - **Cultural Taboos:** [things to avoid or be aware of]
-    - **Local Etiquette:** [dining, shopping, social interactions]
-    
-    **Local Recommendations:**
-    - **Hidden Gems:** [off-the-beaten-path attractions]
-    - **Local Favorites:** [where locals eat, shop, and hang out]
-    - **Best Photo Spots:** [scenic locations and timing]
-    - **Shopping Tips:** [markets, bargaining, souvenirs]
-    - **Nightlife:** [safe and enjoyable evening options]
-    
-    **Seasonal Considerations:**
-    - **Peak Season:** [crowds, prices, booking requirements]
-    - **Off-Season:** [advantages, weather considerations]
-    - **Local Events:** [festivals, holidays, special events]
-    - **Weather Patterns:** [monthly averages and what to expect]
-    
-    **7. SAFETY & EMERGENCY**
-    
-    **Health & Medical:**
-    - **Medical Facilities:** [hospitals, clinics, pharmacies with addresses]
-    - **Emergency Numbers:** [ambulance, police, fire services]
-    - **Health Insurance:** [coverage details and claim procedures]
-    - **Prescription Medications:** [local availability and regulations]
-    - **COVID-19 Protocols:** [current requirements and procedures]
-    
-    **Safety Information:**
-    - **Safe Areas:** [neighborhoods and districts to visit]
-    - **Areas to Avoid:** [high-crime areas or tourist traps]
-    - **Scam Awareness:** [common scams and how to avoid them]
-    - **Personal Safety:** [tips for staying safe while traveling]
-    - **Emergency Procedures:** [what to do in various emergency situations]
-    
-    **Travel Insurance:**
-    - **Policy Details:** [coverage amounts and exclusions]
-    - **Emergency Contacts:** [24/7 assistance numbers]
-    - **Claim Procedures:** [how to file claims and required documentation]
-    - **Medical Coverage:** [healthcare and evacuation coverage]
-    - **Trip Cancellation:** [covered reasons and claim process]
-    
-    **8. BUDGET & PAYMENTS**
-    
-    **Cost Breakdown:**
-    - **Flights:** [amount] ([percentage]% of total)
-    - **Accommodation:** [amount] ([percentage]% of total)
-    - **Activities:** [amount] ([percentage]% of total)
-    - **Transportation:** [amount] ([percentage]% of total)
-    - **Dining:** [amount] ([percentage]% of total)
-    - **Shopping:** [amount] ([percentage]% of total)
-    - **Emergency Fund:** [amount] reserved for unexpected expenses
-    - **Total Cost:** [amount] vs. budget of [amount]
-    
-    **Payment Information:**
-    - **Payment Methods:** [accepted payment types]
-    - **Currency:** [local currency and exchange rates]
-    - **ATMs:** [locations and fees]
-    - **Credit Cards:** [acceptance and foreign transaction fees]
-    - **Cash Requirements:** [how much cash to carry]
-    
-    **Payment Schedule:**
-    - **Pre-paid:** [amount] already paid
-    - **On Arrival:** [amount] due upon arrival
-    - **During Trip:** [amount] to be paid during trip
-    - **Post Trip:** [amount] due after return
-    
-    **9. PACKING & PREPARATION**
-    
-    **Weather-Based Packing:**
-    - **Clothing:** [appropriate attire for expected weather]
-    - **Footwear:** [comfortable and weather-appropriate shoes]
-    - **Accessories:** [hats, sunglasses, umbrellas, etc.]
-    - **Electronics:** [chargers, adapters, power banks]
-    - **Toiletries:** [essentials and local availability]
-    
-    **Special Requirements:**
-    - **Medical Supplies:** [prescriptions, first aid, medications]
-    - **Accessibility Equipment:** [if needed, availability at destination]
-    - **Travel Documents:** [passport, visas, insurance, confirmations]
-    - **Entertainment:** [books, games, music for downtime]
-    - **Comfort Items:** [travel pillows, earplugs, eye masks]
-    
-    **Packing Tips:**
-    - **Luggage Restrictions:** [airline and accommodation limits]
-    - **Security:** [TSA locks, valuables protection]
-    - **Organization:** [packing cubes, document organization]
-    - **Essentials:** [items to keep in carry-on vs. checked luggage]
-    
-    **10. CONTACT INFORMATION**
-    
-    **Emergency Contacts:**
-    - **Local Emergency:** [emergency services numbers]
-    - **Embassy/Consulate:** [home country representation]
-    - **Travel Insurance:** [24/7 assistance hotline]
-    - **Local Support:** [tour guide, hotel, or local contact]
-    
-    **Service Providers:**
-    - **Airline:** [customer service numbers and email]
-    - **Hotel:** [front desk, concierge, reservations]
-    - **Tour Operators:** [contact details for all booked activities]
-    - **Restaurants:** [phone numbers for all reservations]
-    - **Transportation:** [taxi companies, car rental agencies]
-    
-    **Personal Contacts:**
-    - **Home Emergency:** [family or friend contact for emergencies]
-    - **Travel Companions:** [contact details for fellow travelers]
-    - **Work Emergency:** [if applicable, work contact for urgent matters]
-    
-    **11. APPENDICES**
-    
-    **Maps & Directions:**
-    - **Hotel Location:** [map and directions from airport]
-    - **Key Attractions:** [maps and directions to main sites]
-    - **Restaurant Locations:** [maps to all reserved restaurants]
-    - **Emergency Locations:** [hospitals, police stations, embassies]
-    
-    **Useful Phrases:**
-    - **Greetings:** [hello, thank you, please, excuse me]
-    - **Directions:** [left, right, straight, where is...]
-    - **Emergency:** [help, police, doctor, hospital]
-    - **Dining:** [menu, bill, delicious, spicy, vegetarian]
-    - **Shopping:** [how much, discount, receipt, change]
-    
-    **Local Information:**
-    - **Public Holidays:** [dates and what's closed]
-    - **Business Hours:** [typical opening times for shops and services]
-    - **Public Transportation:** [schedules, routes, fares]
-    - **Weather Patterns:** [monthly averages and what to expect]
-    
-    **DOCUMENT FEATURES:**
-    
-    **Navigation:**
-    - Table of contents with page numbers
-    - Color-coded sections for easy reference
-    - Quick reference cards for essential information
-    - Index of important terms and locations
-    
-    **Accessibility:**
-    - Large, readable fonts
-    - High contrast colors
-    - Clear section headers
-    - Bullet points and numbered lists
-    - Visual icons and symbols
-    
-    **Digital Features:**
-    - Clickable links to websites and maps
-    - QR codes for quick access to online resources
-    - Downloadable PDF version
-    - Mobile-friendly formatting
-    - Offline access capability
-    
-    **FORMAT:** Present as a professional, comprehensive document with clear sections, 
-    easy navigation, and all essential information organized for quick reference. 
-    Include visual elements, checklists, and practical tips throughout. 
-    Ensure the document is both informative and user-friendly for travelers of all experience levels.
+    {
+      "document": {
+        "version": "string",
+        "sections": [
+          {
+            "title": "string",
+            "content": {
+              "type": "string",
+              "data": "string"
+            }
+          }
+        ]
+      }
+    }
   agent: quality_assurance
 
 

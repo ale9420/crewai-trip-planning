@@ -1,16 +1,22 @@
 [project]
 name = "trip_planning"
-version = "0.1.0"
+version = "0.2.0"
 description = "trip-planning using crewAI"
-authors = [{ name = "Your Name", email = "you@example.com" }]
+authors = [{ name = "Alejandro Ramirez Garcia", email = "gx_alejandro@hotmail.com" }]
 requires-python = ">=3.10,<3.14"
 dependencies = [
-    "crewai[tools]>=0.141.0,<1.0.0",
+    "crewai[tools]>=0.165.0,<1.0.0",
+    "fastapi[standard]>=0.116.1",
+    "langchain-community>=0.3.27",
+    "langchain-openai>=0.2.14",
     "python-dotenv>=1.0.0",
 ]
 
+[tool.setuptools]
+packages = {find = {}}
+
 [project.scripts]
-trip_planning = "trip_planning.main:run"
+trip_planning = "trip_planning.main:main"
 run_crew = "trip_planning.main:run"
 train = "trip_planning.main:train"
 replay = "trip_planning.main:replay"
