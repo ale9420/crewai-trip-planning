@@ -286,7 +286,7 @@ budget_final_check_task:
 create_travel_document_task:
   description: >
     Create comprehensive travel document with all trip details.
-    Consider: {start_date}, {end_date}, {travelers}, {trip_type}
+    Consider: {start_date}, {end_date}, {travelers}, {trip_type} send an email to {email} with the document.
   expected_output: >
     {
       "document": {

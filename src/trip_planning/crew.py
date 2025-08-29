@@ -9,6 +9,7 @@ from crewai_tools import SerperDevTool
 from trip_planning.models.budget import FinalBudgetSummary
 from trip_planning.models.dining import DiningSearchResults
 from .models import DestinationInvestigation, FlightSearchResults, AccommodationSearchResults, TransportationSearchResults, AttractionSearchResults, StructuredItinerary, ItineraryValidationReport, ComprehensiveTravelDocument
+from .tools.email_tool import EmailTool
 
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
@@ -67,7 +68,8 @@ class TripPlanning():
     def quality_assurance(self) -> Agent:
         return Agent(
             config=self.agents_config['quality_assurance'], # type: ignore[index]
-            verbose=True
+            verbose=True,
+            tools=[EmailTool()]  # Adding the EmailTool to the quality_assurance agent,
         )
     
     # Research Phase

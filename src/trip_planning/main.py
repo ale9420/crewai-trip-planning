@@ -26,6 +26,7 @@ class TripRequest(BaseModel):
     accomodation: str
     flights: str
     user_preferences: str
+    email: str
 
 @app.post("/plan-trip")
 async def plan_trip(trip_request: TripRequest):
