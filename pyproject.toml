@@ -1,6 +1,6 @@
 [project]
 name = "trip_planning"
-version = "0.2.0"
+version = "0.2.1"
 description = "trip-planning using crewAI"
 authors = [{ name = "Alejandro Ramirez Garcia", email = "gx_alejandro@hotmail.com" }]
 requires-python = ">=3.10,<3.14"

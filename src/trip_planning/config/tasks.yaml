@@ -2,8 +2,29 @@ destination_search_task:
   description: >
     Research destination {destination} for travel from {start_date} to {end_date}.
     Consider: {budget}, {travelers}, {trip_type}, {accomodation}, {flights}, {origin}
+  depends_on: []  # This is the initial task with no dependencies
+  metadata:
+    version: "1.0"
+    priority: 1
+    estimated_duration: "5m"
+    retry_policy:
+      max_attempts: 3
+      delay_between_attempts: "1m"
+  required_params:
+    - destination
+    - start_date
+    - end_date
+    - budget
+    - travelers
+    - trip_type
   expected_output: >
     {
+      "metadata": {
+        "version": "1.0",
+        "timestamp": "string",
+        "task_id": "string",
+        "status": "success|error|partial"
+      },
       "weather": {
         "temperature_range": "string",
         "conditions": "string",
@@ -34,8 +55,41 @@ flight_search_task:
   description: >
     Search flights using multiple sources for {origin} to {destination}.
     Consider: {budget}, {travelers}, {trip_type}, {start_date}, {end_date}, {flights}
+  depends_on:
+    - destination_search_task  # Needs destination information first
+  metadata:
+    version: "1.0"
+    priority: 2
+    estimated_duration: "10m"
+    retry_policy:
+      max_attempts: 3
+      delay_between_attempts: "2m"
+  required_params:
+    - origin
+    - destination
+    - start_date
+    - end_date
+    - budget
+    - travelers
   expected_output: >
     {
+      "metadata": {
+        "version": "1.0",
+        "timestamp": "string",
+        "task_id": "string",
+        "status": "success|error|partial"
+      },
+      "errors": {
+        "count": "integer",
+        "details": [
+          {
+            "code": "string",
+            "message": "string",
+            "severity": "warning|error",
+            "context": "string"
+          }
+        ]
+      },
       "summary": {
         "total_options": integer,
         "price_range": {
@@ -86,6 +140,8 @@ accommodation_search_task:
   description: >
     Search accommodations in {destination} from {start_date} to {end_date}.
     Consider: {budget}, {travelers}, {trip_type}, {accomodation}
+  depends_on:
+    - destination_search_task  # Needs destination information first
   expected_output: >
     {
       "summary": {
@@ -125,6 +181,8 @@ transportation_search_task:
   description: >
     Research local transportation in {destination} from {start_date} to {end_date}.
     Consider: {budget}, {travelers}, {trip_type}
+  depends_on:
+    - destination_search_task  # Needs destination information first
   expected_output: >
     {
       "summary": {
@@ -161,6 +219,9 @@ attraction_search_task:
   description: >
     Research attractions in {destination} for {start_date} to {end_date}.
     Consider: {budget}, {travelers}, {trip_type}
+  depends_on:
+    - destination_search_task  # Needs destination information first
+    - transportation_search_task  # Useful to know transport options to attractions
   expected_output: >
     {
       "summary": {
@@ -194,6 +255,9 @@ dining_search_task:
   description: >
     Research dining options in {destination}.
     Consider: {budget}, {travelers}, {trip_type}
+  depends_on:
+    - destination_search_task  # Needs destination information first
+    - accommodation_search_task  # Useful to know restaurant proximity to accommodation
   expected_output: >
     {
       "summary": {
@@ -221,6 +285,12 @@ structure_itinerary_task:
   description: >
     Create daily itinerary from {start_date} to {end_date}.
     Consider: {travelers}, {trip_type}
+  depends_on:
+    - flight_search_task  # Need flight timings
+    - accommodation_search_task  # Need accommodation details
+    - transportation_search_task  # Need local transport options
+    - attraction_search_task  # Need attraction details
+    - dining_search_task  # Need dining options
   expected_output: >
     {
       "summary": {
@@ -246,7 +316,10 @@ structure_itinerary_task:
 validate_itinerary_task:
   description: >
     Validate complete itinerary for {start_date} to {end_date}.
-    Consider: {budget}, {travelers}, {trip_type}
+    Consider: {budget}, {travelers}, {trip_type}. It is not needed to
+    send any email.
+  depends_on:
+    - structure_itinerary_task  # Need the complete itinerary to validate
   expected_output: >
     {
       "validation": {
@@ -266,6 +339,13 @@ budget_final_check_task:
   description: >
     Verify budget compliance for complete trip plan.
     Consider: {budget}, {travelers}, {trip_type}
+  depends_on:
+    - validate_itinerary_task  # Need validated itinerary
+    - flight_search_task  # Need flight costs
+    - accommodation_search_task  # Need accommodation costs
+    - transportation_search_task  # Need local transport costs
+    - attraction_search_task  # Need attraction costs
+    - dining_search_task  # Need dining costs
   expected_output: >
     {
       "summary": {
@@ -285,21 +365,70 @@ budget_final_check_task:
 
 create_travel_document_task:
   description: >
-    Create comprehensive travel document with all trip details.
-    Consider: {start_date}, {end_date}, {travelers}, {trip_type} send an email to {email} with the document.
+    Create a comprehensive travel document in Markdown format with all trip details.
+    Consider: {start_date}, {end_date}, {travelers}, {trip_type}.
+  depends_on:
+    - validate_itinerary_task  # Need validated itinerary
+    - budget_final_check_task  # Need final budget verification
   expected_output: >
     {
-      "document": {
-        "version": "string",
-        "sections": [
-          {
-            "title": "string",
-            "content": {
-              "type": "string",
-              "data": "string"
-            }
-          }
-        ]
+      "trip_title": "string",
+      "summary": "string",
+      "recommendations": ["string"],
+      "practical_information": [
+        {
+          "title": "string",
+          "content": "string",
+          "resources": ["string"]
+        }
+      ],
+      "emergency_contacts": [
+        {
+          "name": "string",
+          "phone": "string",
+          "relation": "string",
+          "notes": "string"
+        }
+      ],
+      "resources": ["string"],
+      "notes": "string"
+    }
+  agent: quality_assurance
+
+
+prepare_travel_email_task:
+  description: >
+    Prepare and send a beautifully formatted HTML email with all trip details to {recipient_email}.
+    Convert markdown content to responsive HTML with CSS styling.
+    Translate the content to {locale} language.
+  depends_on:
+    - create_travel_document_task  # Need the final travel document to create email
+  required_params:
+    - recipient_email  # Email address must be provided
+    - locale  # Language preference for email content
+  expected_output: >
+    {
+      "status": "string",
+      "message": "string",
+      "recipient": "string",
+      "sent_timestamp": "string",
+      "template": {
+        "html_content": "string",
+        "css_styles": "string",
+        "translations": {
+          "en": "string",
+          "es": "string"
+        }
+      },
+      "delivery_status": {
+        "success": "boolean",
+        "error": "string",
+        "retry_count": "integer"
+      },
+      "selected_language": "string",
+      "subject": {
+        "en": "string",
+        "es": "string"
       }
     }
   agent: quality_assurance

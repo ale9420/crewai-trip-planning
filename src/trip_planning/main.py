@@ -15,6 +15,7 @@ warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
 app = FastAPI()
 
+
 class TripRequest(BaseModel):
     origin: str
     destination: str
@@ -26,7 +27,8 @@ class TripRequest(BaseModel):
     accomodation: str
     flights: str
     user_preferences: str
-    email: str
+    recipient_email: str
+    locale: str
 
 @app.post("/plan-trip")
 async def plan_trip(trip_request: TripRequest):
@@ -48,7 +50,7 @@ def main():
     """
     import uvicorn
     print("Starting FastAPI server...")
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000, timeout_keep_alive=1200)
 
 # This main file is intended to be a way for you to run your
 # crew locally, so refrain from adding unnecessary logic into this file.

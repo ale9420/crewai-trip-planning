@@ -10,6 +10,7 @@ from trip_planning.models.budget import FinalBudgetSummary
 from trip_planning.models.dining import DiningSearchResults
 from .models import DestinationInvestigation, FlightSearchResults, AccommodationSearchResults, TransportationSearchResults, AttractionSearchResults, StructuredItinerary, ItineraryValidationReport, ComprehensiveTravelDocument
 from .tools.email_tool import EmailTool
+from trip_planning.models.email import TravelEmailResponse
 
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
@@ -142,6 +143,13 @@ class TripPlanning():
        return Task(
            config=self.tasks_config['create_travel_document_task'],
            output_pydantic=ComprehensiveTravelDocument
+       )
+
+    @task
+    def prepare_travel_email_task(self) -> Task:
+       return Task(
+           config=self.tasks_config['prepare_travel_email_task'],
+           output_pydantic=TravelEmailResponse
        )
 
     @crew

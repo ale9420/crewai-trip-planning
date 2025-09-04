@@ -11,7 +11,7 @@ class SendEmailInput(BaseModel):
     body: str = Field(..., description="Content or body of the email.")
 
 class EmailTool(BaseTool):
-    name: str = "Name of my tool"
+    name: str = "Email Tool"
     description: str = (
         "Clear description for what this tool is useful for, your agent will need this information to use it."
     )

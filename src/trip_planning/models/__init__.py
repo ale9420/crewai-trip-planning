@@ -99,4 +99,6 @@ __all__ = [
     "TravelDocumentSection",
     "EmergencyContact",
     "ComprehensiveTravelDocument",
+
+    "TravelEmailResponse"
 ]

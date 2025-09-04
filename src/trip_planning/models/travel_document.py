@@ -14,9 +14,7 @@ class EmergencyContact(BaseModel):
 
 class ComprehensiveTravelDocument(BaseModel):
     trip_title: str
-    traveler_name: Optional[str] = None
     summary: Optional[str] = None
-    itinerary: Optional[str] = None  # Markdown or structured text
     recommendations: Optional[List[str]] = None
     practical_information: Optional[List[TravelDocumentSection]] = None
     emergency_contacts: Optional[List[EmergencyContact]] = None
