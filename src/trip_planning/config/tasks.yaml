@@ -55,66 +55,67 @@ flight_search_task:
     - travelers
   expected_output: >
     {
-      "metadata": {
-        "version": "1.0",
-        "timestamp": "string",
-        "task_id": "string",
-        "status": "success|error|partial"
-      },
-      "errors": {
-        "count": "integer",
-        "details": [
-          {
-            "code": "string",
-            "message": "string",
-            "severity": "warning|error",
-            "context": "string"
-          }
-        ]
-      },
-      "summary": {
+      "search_summary": {
         "total_options": integer,
         "price_range": {
           "lowest": "string",
           "highest": "string",
           "currency": "string"
         },
-        "best_value": ["string"]
+        "best_value": {
+          "airline": "string",
+          "flight_numbers": ["string"],
+          "departure_time": "string",
+          "arrival_time": "string",
+          "total_travel_time": "string",
+          "stops": integer,
+          "layover_details": ["string"],
+          "aircraft_type": "string",
+          "total_price_per_person": float,
+          "price_breakdown": ["string"],
+          "baggage_allowance": ["string"],
+          "seat_selection_costs": ["string"],
+          "cancellation_fees": ["string"],
+          "cabin_class": ["string"],
+          "in_flight_amenities": ["string"],
+          "on_time_performance": float,
+          "customer_rating": float,
+          "airport_transfer_info": "string",
+          "visa_requirements": ["string"],
+          "covid_requirements": ["string"],
+          "booking_class": "string",
+          "loyalty_program": "string"
+        }
       },
       "flight_options": [
         {
-          "flight_details": {
-            "airline": "string",
-            "flight_number": "string",
-            "departure": {
-              "time": "string",
-              "airport": "string"
-            },
-            "arrival": {
-              "time": "string",
-              "airport": "string"
-            },
-            "duration": "string",
-            "stops": {
-              "count": integer,
-              "layovers": [
-                {
-                  "airport": "string",
-                  "duration": "string"
-                }
-              ]
-            }
-          },
-          "pricing": {
-            "total": "string",
-            "breakdown": {
-              "base": "string",
-              "taxes": "string",
-              "fees": "string"
-            }
-          }
+          "airline": "string",
+          "flight_numbers": ["string"],
+          "departure_time": "string",
+          "arrival_time": "string",
+          "total_travel_time": "string",
+          "stops": integer,
+          "layover_details": ["string"],
+          "aircraft_type": "string",
+          "total_price_per_person": float,
+          "price_breakdown": ["string"],
+          "baggage_allowance": ["string"],
+          "seat_selection_costs": ["string"],
+          "cancellation_fees": ["string"],
+          "cabin_class": ["string"],
+          "in_flight_amenities": ["string"],
+          "on_time_performance": float,
+          "customer_rating": float,
+          "airport_transfer_info": "string",
+          "visa_requirements": ["string"],
+          "covid_requirements": ["string"],
+          "booking_class": "string",
+          "loyalty_program": "string"
         }
-      ]
+      ],
+      "recommendations": ["string"],
+      "alternative_airports": ["string"],
+      "seasonal_considerations": ["string"]
     }
   agent: travel_searcher
 

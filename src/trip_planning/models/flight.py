@@ -41,7 +41,7 @@ class FlightOption(BaseModel):
         description="Number of stops (0 for direct flights, 1 for one connection, etc.). "
                    "Include layover duration and airport codes."
     )
-    layover_details: List[str] = Field(
+    layover_details: Optional[List[str]] = Field(
         default_factory=list,
         description="Detailed layover information including airport codes, duration, "
                    "and any terminal changes. Include visa requirements for layover countries."
@@ -106,7 +106,7 @@ class FlightOption(BaseModel):
         description="Visa requirements for any layover countries. "
                    "Include transit visa needs and application processes."
     )
-    covid_requirements: List[str] = Field(
+    covid_requirements: Optional[List[str]] = Field(
         default_factory=list,
         description="COVID-19 related requirements including testing, vaccination, "
                    "and quarantine rules for all countries in the journey."
@@ -121,16 +121,8 @@ class FlightOption(BaseModel):
         description="Loyalty program earning potential including miles/points per dollar "
                    "and any elite status benefits that apply."
     )
-    recommended_booking_channel: Optional[str] = Field(
-        default=None,
-        description="Best booking channel recommendation (direct airline, OTA, travel agent). "
-                   "Include reasoning and any exclusive deals available."
-    )
-    booking_timing: Optional[str] = Field(
-        default=None,
-        description="Optimal booking timing recommendations. Include advance booking "
-                   "requirements and last-minute deal possibilities."
-    )
+
+
 
 
 class FlightSearchResults(BaseModel):
@@ -151,8 +143,8 @@ class FlightSearchResults(BaseModel):
         description="Detailed flight options (maximum 10) ranked by relevance and value. "
                    "Include a mix of direct flights, connections, and different price points."
     )
-    recommendations: Optional[Dict[str, Any]] = Field(
-        default_factory=dict,
+    recommendations: Optional[List[str]] = Field(
+        default_factory=list,
         description="Specific recommendations including top 3 value-for-money options, "
                    "best options for families, business travelers, and budget-conscious travelers. "
                    "Include reasoning for each recommendation."
@@ -162,33 +154,9 @@ class FlightSearchResults(BaseModel):
         description="Nearby airports that could offer better pricing or convenience. "
                    "Include distance from primary airports and transportation options."
     )
-    flexible_date_recommendations: List[str] = Field(
-        default_factory=list,
-        description="Recommendations for flexible date travel including potential savings "
-                   "and optimal travel dates within the user's flexibility range."
-    )
-    seasonal_considerations: List[str] = Field(
+    seasonal_considerations: Optional[List[str]] = Field(
         default_factory=list,
         description="Seasonal price variations, peak travel periods, and weather impacts "
                    "on flight availability and pricing."
     )
-    promotions_and_deals: List[str] = Field(
-        default_factory=list,
-        description="Current promotions, fare sales, and special deals that could "
-                   "provide additional savings or benefits."
-    )
-    travel_advisories: List[str] = Field(
-        default_factory=list,
-        description="Any travel advisories, restrictions, or warnings relevant to "
-                   "the flight routes or destinations."
-    )
-    booking_tips: List[str] = Field(
-        default_factory=list,
-        description="Best practices for booking including timing, payment methods, "
-                   "and strategies for securing the best deals."
-    )
-    insurance_recommendations: List[str] = Field(
-        default_factory=list,
-        description="Travel insurance recommendations including coverage options, "
-                   "costs, and specific policies that would benefit this trip."
-    )
+
