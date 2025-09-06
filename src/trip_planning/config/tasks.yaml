@@ -19,35 +19,17 @@ destination_search_task:
     - trip_type
   expected_output: >
     {
-      "metadata": {
-        "version": "1.0",
-        "timestamp": "string",
-        "task_id": "string",
-        "status": "success|error|partial"
-      },
-      "weather": {
-        "temperature_range": "string",
-        "conditions": "string",
-        "seasonal_alerts": ["string"]
-      },
-      "events": {
-        "holidays": ["string"],
-        "festivals": ["string"],
-        "special_events": ["string"]
-      },
-      "entry_requirements": {
-        "visa": {
-          "required": boolean,
-          "process": "string",
-          "cost": "string",
-          "timeline": "string"
-        },
-        "health": {
-          "vaccinations": ["string"],
-          "covid_rules": "string",
-          "insurance": "string"
-        }
-      }
+      "overview": "string",
+      "weather": ["string"],
+      "events": ["string"],
+      "entry_requirements": ["string"],
+      "safety_tips": ["string"],
+      "cultural_norms": ["string"],
+      "best_times_to_visit": ["string"],
+      "local_transportation": ["string"],
+      "money_and_connectivity": ["string"],
+      "insider_tips": ["string"],
+      "recent_developments": ["string"]
     }
   agent: travel_searcher
 

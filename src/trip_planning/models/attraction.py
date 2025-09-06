@@ -7,7 +7,7 @@ that agents use to provide comprehensive local attraction and activity informati
 
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
-from .common import PriceInfo, ContactInfo, Review
+from .common import ContactInfo
 
 
 class CulturalHistoricalAttraction(BaseModel):
