@@ -7,9 +7,6 @@ destination_search_task:
     version: "1.0"
     priority: 1
     estimated_duration: "5m"
-    retry_policy:
-      max_attempts: 3
-      delay_between_attempts: "1m"
   required_params:
     - destination
     - start_date
@@ -18,19 +15,10 @@ destination_search_task:
     - travelers
     - trip_type
   expected_output: >
-    {
-      "overview": "string",
-      "weather": ["string"],
-      "events": ["string"],
-      "entry_requirements": ["string"],
-      "safety_tips": ["string"],
-      "cultural_norms": ["string"],
-      "best_times_to_visit": ["string"],
-      "local_transportation": ["string"],
-      "money_and_connectivity": ["string"],
-      "insider_tips": ["string"],
-      "recent_developments": ["string"]
-    }
+    A comprehensive destination overview including current weather conditions,
+    upcoming events, entry requirements, safety considerations, cultural insights,
+    optimal visiting times, transportation options, financial preparation tips,
+    local insider knowledge, and any recent developments affecting travelers.
   agent: travel_searcher
 
 flight_search_task:
@@ -43,9 +31,6 @@ flight_search_task:
     version: "1.0"
     priority: 2
     estimated_duration: "10m"
-    retry_policy:
-      max_attempts: 3
-      delay_between_attempts: "2m"
   required_params:
     - origin
     - destination
@@ -54,69 +39,10 @@ flight_search_task:
     - budget
     - travelers
   expected_output: >
-    {
-      "search_summary": {
-        "total_options": integer,
-        "price_range": {
-          "lowest": "string",
-          "highest": "string",
-          "currency": "string"
-        },
-        "best_value": {
-          "airline": "string",
-          "flight_numbers": ["string"],
-          "departure_time": "string",
-          "arrival_time": "string",
-          "total_travel_time": "string",
-          "stops": integer,
-          "layover_details": ["string"],
-          "aircraft_type": "string",
-          "total_price_per_person": float,
-          "price_breakdown": ["string"],
-          "baggage_allowance": ["string"],
-          "seat_selection_costs": ["string"],
-          "cancellation_fees": ["string"],
-          "cabin_class": ["string"],
-          "in_flight_amenities": ["string"],
-          "on_time_performance": float,
-          "customer_rating": float,
-          "airport_transfer_info": "string",
-          "visa_requirements": ["string"],
-          "covid_requirements": ["string"],
-          "booking_class": "string",
-          "loyalty_program": "string"
-        }
-      },
-      "flight_options": [
-        {
-          "airline": "string",
-          "flight_numbers": ["string"],
-          "departure_time": "string",
-          "arrival_time": "string",
-          "total_travel_time": "string",
-          "stops": integer,
-          "layover_details": ["string"],
-          "aircraft_type": "string",
-          "total_price_per_person": float,
-          "price_breakdown": ["string"],
-          "baggage_allowance": ["string"],
-          "seat_selection_costs": ["string"],
-          "cancellation_fees": ["string"],
-          "cabin_class": ["string"],
-          "in_flight_amenities": ["string"],
-          "on_time_performance": float,
-          "customer_rating": float,
-          "airport_transfer_info": "string",
-          "visa_requirements": ["string"],
-          "covid_requirements": ["string"],
-          "booking_class": "string",
-          "loyalty_program": "string"
-        }
-      ],
-      "recommendations": ["string"],
-      "alternative_airports": ["string"],
-      "seasonal_considerations": ["string"]
-    }
+    A detailed flight analysis including best-value options, comprehensive price comparisons,
+    flight schedules, layover details, baggage policies, and travel requirements. Includes
+    alternative airport suggestions, seasonal travel insights, and personalized recommendations
+    based on comfort, convenience, and budget considerations.
   agent: travel_searcher
 
 accommodation_search_task:
@@ -126,38 +52,10 @@ accommodation_search_task:
   depends_on:
     - destination_search_task  # Needs destination information first
   expected_output: >
-    {
-      "summary": {
-        "total_options": integer,
-        "price_range": {
-          "lowest": "string",
-          "highest": "string",
-          "currency": "string"
-        },
-        "best_value": ["string"]
-      },
-      "accommodations": [
-        {
-          "basic_info": {
-            "name": "string",
-            "type": "string",
-            "rating": float,
-            "address": "string",
-            "location": "string"
-          },
-          "pricing": {
-            "total": "string",
-            "per_night": "string",
-            "fees": "string"
-          },
-          "features": {
-            "amenities": ["string"],
-            "room_types": ["string"],
-            "accessibility": ["string"]
-          }
-        }
-      ]
-    }
+    A curated selection of accommodations matching the specified criteria, highlighting
+    best-value options across different price ranges. Each option includes detailed
+    information about location, amenities, room types, accessibility features, and
+    total cost breakdown, ensuring the perfect match for comfort and budget requirements.
   agent: travel_searcher
 
 transportation_search_task:
@@ -167,35 +65,10 @@ transportation_search_task:
   depends_on:
     - destination_search_task  # Needs destination information first
   expected_output: >
-    {
-      "summary": {
-        "options": ["string"],
-        "price_range": {
-          "lowest": "string",
-          "highest": "string",
-          "currency": "string"
-        }
-      },
-      "public_transit": {
-        "types": ["string"],
-        "costs": {
-          "single": "string",
-          "day_pass": "string",
-          "weekly": "string"
-        },
-        "coverage": ["string"]
-      },
-      "private_options": {
-        "taxi": {
-          "availability": "string",
-          "costs": "string"
-        },
-        "rental": {
-          "types": ["string"],
-          "costs": "string"
-        }
-      }
-    }
+    A comprehensive transportation guide covering all available options from public
+    transit to private services. Includes detailed pricing for different pass types,
+    coverage areas, taxi services, and rental options, helping travelers make
+    informed decisions about local mobility during their stay.
   agent: travel_searcher
 
 attraction_search_task:
@@ -206,32 +79,10 @@ attraction_search_task:
     - destination_search_task  # Needs destination information first
     - transportation_search_task  # Useful to know transport options to attractions
   expected_output: >
-    {
-      "summary": {
-        "total": integer,
-        "categories": ["string"],
-        "price_range": {
-          "free": ["string"],
-          "paid": {
-            "low": "string",
-            "high": "string",
-            "currency": "string"
-          }
-        }
-      },
-      "attractions": [
-        {
-          "name": "string",
-          "type": "string",
-          "cost": "string",
-          "timing": {
-            "duration": "string",
-            "hours": "string",
-            "best_time": "string"
-          }
-        }
-      ]
-    }
+    A carefully selected list of attractions categorized by type and cost, from free
+    activities to premium experiences. Each attraction includes essential details about
+    visiting duration, operating hours, and optimal timing recommendations to maximize
+    the experience while staying within budget.
   agent: travel_searcher
 
 dining_search_task:
@@ -242,26 +93,10 @@ dining_search_task:
     - destination_search_task  # Needs destination information first
     - accommodation_search_task  # Useful to know restaurant proximity to accommodation
   expected_output: >
-    {
-      "summary": {
-        "total": integer,
-        "cuisines": ["string"],
-        "price_ranges": {
-          "budget": ["string"],
-          "mid": ["string"],
-          "high": ["string"]
-        }
-      },
-      "restaurants": [
-        {
-          "name": "string",
-          "cuisine": "string",
-          "price_range": "string",
-          "location": "string",
-          "highlights": ["string"]
-        }
-      ]
-    }
+    A diverse selection of dining options spanning various cuisines and price points,
+    from local street food to fine dining experiences. Each recommendation includes
+    location details, price ranges, and special highlights, ensuring memorable
+    culinary experiences throughout the trip.
   agent: travel_searcher
 
 structure_itinerary_task:
@@ -275,107 +110,28 @@ structure_itinerary_task:
     - attraction_search_task  # Need attraction details
     - dining_search_task  # Need dining options
   expected_output: >
-    {
-      "summary": {
-        "days": integer,
-        "highlights": ["string"]
-      },
-      "days": [
-        {
-          "date": "string",
-          "activities": [
-            {
-              "time": "string",
-              "type": "string",
-              "details": "string",
-              "duration": "string"
-            }
-          ]
-        }
-      ]
-    }
+    A well-balanced day-by-day itinerary that seamlessly integrates all planned
+    activities, dining, and transportation. Each day is thoughtfully structured with
+    precise timing and duration estimates, ensuring a smooth and enjoyable travel
+    experience that maximizes the destination's highlights.
   agent: itinerary_planner
-
-validate_itinerary_task:
-  description: >
-    Validate complete itinerary for {start_date} to {end_date}.
-    Consider: {budget}, {travelers}, {trip_type}. It is not needed to
-    send any email.
-  depends_on:
-    - structure_itinerary_task  # Need the complete itinerary to validate
-  expected_output: >
-    {
-      "validation": {
-        "score": float,
-        "issues": ["string"],
-        "recommendations": ["string"]
-      },
-      "checks": {
-        "timing": boolean,
-        "budget": boolean,
-        "feasibility": boolean
-      }
-    }
-  agent: quality_assurance
-
-budget_final_check_task:
-  description: >
-    Verify budget compliance for complete trip plan.
-    Consider: {budget}, {travelers}, {trip_type}
-  depends_on:
-    - validate_itinerary_task  # Need validated itinerary
-    - flight_search_task  # Need flight costs
-    - accommodation_search_task  # Need accommodation costs
-    - transportation_search_task  # Need local transport costs
-    - attraction_search_task  # Need attraction costs
-    - dining_search_task  # Need dining costs
-  expected_output: >
-    {
-      "summary": {
-        "total": "string",
-        "remaining": "string",
-        "status": "string"
-      },
-      "breakdown": {
-        "transport": "string",
-        "accommodation": "string",
-        "activities": "string",
-        "dining": "string",
-        "other": "string"
-      }
-    }
-  agent: budget_manager
 
 create_travel_document_task:
   description: >
     Create a comprehensive travel document in Markdown format with all trip details.
     Consider: {start_date}, {end_date}, {travelers}, {trip_type}.
   depends_on:
-    - validate_itinerary_task  # Need validated itinerary
-    - budget_final_check_task  # Need final budget verification
+    - flight_search_task  # Need flight timings
+    - accommodation_search_task  # Need accommodation details
+    - transportation_search_task  # Need local transport options
+    - attraction_search_task  # Need attraction details
+    - dining_search_task  # Need dining options
+    - structure_itinerary_task  # Need validated itinerary
   expected_output: >
-    {
-      "trip_title": "string",
-      "summary": "string",
-      "recommendations": ["string"],
-      "practical_information": [
-        {
-          "title": "string",
-          "content": "string",
-          "resources": ["string"]
-        }
-      ],
-      "emergency_contacts": [
-        {
-          "name": "string",
-          "phone": "string",
-          "relation": "string",
-          "notes": "string"
-        }
-      ],
-      "resources": ["string"],
-      "notes": "string"
-    }
+    A comprehensive travel document in Markdown format containing all essential trip
+    details, practical information, recommendations, recommended flight option, recommended accommodation option, and useful
+    resources. Organized in a clear, easy-to-reference format for convenient access
+    during the journey.
   agent: quality_assurance
 
 
@@ -383,38 +139,17 @@ prepare_travel_email_task:
   description: >
     Prepare and send a beautifully formatted HTML email with all trip details to {recipient_email}.
     Convert markdown content to responsive HTML with CSS styling.
-    Translate the content to {locale} language.
+    Translate the content to {locale} language. Add multimedia resources like images and maps to enhance visual appeal.
   depends_on:
     - create_travel_document_task  # Need the final travel document to create email
   required_params:
     - recipient_email  # Email address must be provided
     - locale  # Language preference for email content
   expected_output: >
-    {
-      "status": "string",
-      "message": "string",
-      "recipient": "string",
-      "sent_timestamp": "string",
-      "template": {
-        "html_content": "string",
-        "css_styles": "string",
-        "translations": {
-          "en": "string",
-          "es": "string"
-        }
-      },
-      "delivery_status": {
-        "success": "boolean",
-        "error": "string",
-        "retry_count": "integer"
-      },
-      "selected_language": "string",
-      "subject": {
-        "en": "string",
-        "es": "string"
-      }
-    }
-  agent: quality_assurance
+    A beautifully formatted, responsive HTML email containing the complete trip details,
+    translated into the specified language. Includes delivery confirmation and status
+    updates to ensure successful communication of all travel information to the recipient.
+  agent: ui_designer
 
 
 

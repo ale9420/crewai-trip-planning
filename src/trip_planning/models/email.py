@@ -14,14 +14,28 @@ class EmailLanguage(str, Enum):
 class EmailTemplate(BaseModel):
     html_content: str = Field(..., description="HTML formatted content of the email")
     css_styles: str = Field(..., description="CSS styles for the email template")
-    translations: Dict[EmailLanguage, str] = Field(..., description="Translated content in different languages")
+    translations: Dict[EmailLanguage, str] = Field(
+        ...,
+        description="Translated content in different languages. Must include both 'en' and 'es' keys.",
+        example={
+            EmailLanguage.ENGLISH: "Welcome to your travel itinerary",
+            EmailLanguage.SPANISH: "Bienvenido a su itinerario de viaje"
+        }
+    )
 
 class TravelEmailResponse(BaseModel):
     status: EmailStatus = Field(..., description="Status of the email sending operation")
     message: str = Field(..., description="Detailed message about the email sending result")
     template: EmailTemplate = Field(..., description="The formatted email template with translations")
     selected_language: EmailLanguage = Field(..., description="The language used for the sent email")
-    subject: Dict[EmailLanguage, str] = Field(..., description="Email subject in different languages")
+    subject: Dict[EmailLanguage, str] = Field(
+        ...,
+        description="Email subject in different languages. Must use lowercase language codes: 'en' for English, 'es' for Spanish",
+        example={
+            EmailLanguage.ENGLISH: "Your Travel Itinerary",
+            EmailLanguage.SPANISH: "Su Itinerario de Viaje"
+        }
+    )
 
 class SendEmailInput(BaseModel):
     recipient: str = Field(..., description="Email address of the recipient")

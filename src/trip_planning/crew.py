@@ -6,9 +6,8 @@ from crewai.memory.storage.rag_storage import RAGStorage
 from crewai.memory.storage.ltm_sqlite_storage import LTMSQLiteStorage
 from typing import List
 from crewai_tools import SerperDevTool
-from trip_planning.models.budget import FinalBudgetSummary
 from trip_planning.models.dining import DiningSearchResults
-from .models import DestinationInvestigation, FlightSearchResults, AccommodationSearchResults, TransportationSearchResults, AttractionSearchResults, StructuredItinerary, ItineraryValidationReport, ComprehensiveTravelDocument
+from .models import DestinationInvestigation, FlightSearchResults, AccommodationSearchResults, TransportationSearchResults, AttractionSearchResults, StructuredItinerary, ComprehensiveTravelDocument
 from .tools.email_tool import EmailTool
 from trip_planning.models.email import TravelEmailResponse
 
@@ -37,40 +36,41 @@ class TripPlanning():
     def travel_searcher(self) -> Agent:
         return Agent(
             config=self.agents_config['travel_searcher'], # type: ignore[index]
-            tools=[SerperDevTool()],
-            verbose=True
+            tools=[SerperDevTool()]
         )
 
     @agent
     def budget_manager(self) -> Agent:
         return Agent(
             config=self.agents_config['budget_manager'], # type: ignore[index]
-            tools=[SerperDevTool()],
-            verbose=True
+            tools=[SerperDevTool()]
         )
     
     @agent
     def itinerary_planner(self) -> Agent:
         return Agent(
             config=self.agents_config['itinerary_planner'], # type: ignore[index]
-            tools=[SerperDevTool()],
-            verbose=True
+            tools=[SerperDevTool()]
         )
 
     @agent
     def recommendation_engine(self) -> Agent:
         return Agent(
             config=self.agents_config['recommendation_engine'], # type: ignore[index]
-            tools=[SerperDevTool()],
-            verbose=True
+            tools=[SerperDevTool()]
         )
 
     @agent
     def quality_assurance(self) -> Agent:
         return Agent(
             config=self.agents_config['quality_assurance'], # type: ignore[index]
-            verbose=True,
-            tools=[EmailTool()]  # Adding the EmailTool to the quality_assurance agent,
+        )
+    
+    @agent
+    def ui_designer(self) -> Agent:
+        return Agent(
+            config=self.agents_config['ui_designer'], # type: ignore[index]
+            tools=[EmailTool()]
         )
     
     # Research Phase
@@ -123,20 +123,6 @@ class TripPlanning():
             config=self.tasks_config['structure_itinerary_task'], # type: ignore[index]
             output_pydantic=StructuredItinerary
         )
-
-    @task
-    def budget_final_check_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['budget_final_check_task'], # type: ignore[index]
-            output_pydantic=FinalBudgetSummary
-        )
-
-    @task
-    def validate_itinerary_task(self) -> Task:
-       return Task(
-           config=self.tasks_config['validate_itinerary_task'],
-           output_pydantic=ItineraryValidationReport
-       )
 
     @task
     def create_travel_document_task(self) -> Task:
