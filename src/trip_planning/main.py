@@ -70,7 +70,9 @@ def run():
         "trip_type": "Vacations",
         "accomodation": "Hotel",
         "flights": "economic",
-        "user_preferences": "I want to go to a place where I can relax and enjoy the nature"
+        "user_preferences": "I want to go to a place where I can relax and enjoy the nature",
+        "recipient_email": "user@example.com",
+        "locale": "en"
     }
 
     result = TripPlanning().crew().kickoff(inputs=inputs)

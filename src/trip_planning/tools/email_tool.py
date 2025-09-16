@@ -13,7 +13,8 @@ class SendEmailInput(BaseModel):
 class EmailTool(BaseTool):
     name: str = "Email Tool"
     description: str = (
-        "Clear description for what this tool is useful for, your agent will need this information to use it."
+        "Send emails using the provided recipient email address, subject, and HTML body content. "
+        "Use this tool to send the travel itinerary email to the user's specified email address."
     )
     args_schema: Type[BaseModel] = SendEmailInput
 

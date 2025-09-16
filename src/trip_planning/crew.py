@@ -149,36 +149,36 @@ class TripPlanning():
             tasks=self.tasks, # Automatically created by the @task decorator
             process=Process.sequential,
             verbose=False,
-            memory=True,  # Disabled to reduce context usage
+            memory=False,  # Temporarily disabled due to API errors
             # Long-term memory for persistent storage across sessions
-            long_term_memory = LongTermMemory(
-                storage=LTMSQLiteStorage(
-                    db_path="./memory/long_term_memory_storage.db"
-                )
-            ),
+            # long_term_memory = LongTermMemory(
+            #     storage=LTMSQLiteStorage(
+            #         db_path="./memory/long_term_memory_storage.db"
+            #     )
+            # ),
             # Short-term memory for current context using RAG
-            short_term_memory = ShortTermMemory(
-                storage = RAGStorage(
-                        embedder_config={
-                            "provider": "openai",
-                            "config": {
-                                "model": 'text-embedding-3-small'
-                            }
-                        },
-                        type="short_term",
-                        path="./memory/"
-                    )
-                ),            # Entity memory for tracking key information about entities
-            entity_memory = EntityMemory(
-                storage=RAGStorage(
-                    embedder_config={
-                        "provider": "openai",
-                        "config": {
-                            "model": 'text-embedding-3-small'
-                        }
-                    },
-                    type="short_term",
-                    path="./memory/"
-                )
-            ),
+            # short_term_memory = ShortTermMemory(
+            #     storage = RAGStorage(
+            #             embedder_config={
+            #                 "provider": "openai",
+            #                 "config": {
+            #                     "model": 'text-embedding-3-small'
+            #                 }
+            #             },
+            #             type="short_term",
+            #             path="./memory/"
+            #         )
+            #     ),            # Entity memory for tracking key information about entities
+            # entity_memory = EntityMemory(
+            #     storage=RAGStorage(
+            #         embedder_config={
+            #             "provider": "openai",
+            #             "config": {
+            #                 "model": 'text-embedding-3-small'
+            #             }
+            #         },
+            #         type="short_term",
+            #         path="./memory/"
+            #     )
+            # ),
         )

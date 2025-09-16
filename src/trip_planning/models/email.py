@@ -13,27 +13,21 @@ class EmailLanguage(str, Enum):
 
 class EmailTemplate(BaseModel):
     html_content: str = Field(..., description="HTML formatted content of the email")
-    css_styles: str = Field(..., description="CSS styles for the email template")
-    translations: Dict[EmailLanguage, str] = Field(
-        ...,
-        description="Translated content in different languages. Must include both 'en' and 'es' keys.",
-        example={
-            EmailLanguage.ENGLISH: "Welcome to your travel itinerary",
-            EmailLanguage.SPANISH: "Bienvenido a su itinerario de viaje"
-        }
-    )
+    css_styles: Optional[str] = Field(default="", description="CSS styles for the email template")
 
 class TravelEmailResponse(BaseModel):
-    status: EmailStatus = Field(..., description="Status of the email sending operation")
-    message: str = Field(..., description="Detailed message about the email sending result")
-    template: EmailTemplate = Field(..., description="The formatted email template with translations")
-    selected_language: EmailLanguage = Field(..., description="The language used for the sent email")
-    subject: Dict[EmailLanguage, str] = Field(
-        ...,
+    status: EmailStatus = Field(default=EmailStatus.PENDING, description="Status of the email sending operation")
+    message: str = Field(default="Email template prepared", description="Detailed message about the email sending result")
+    template: Optional[EmailTemplate] = Field(default=None, description="The formatted email template with translations")
+    selected_language: EmailLanguage = Field(default=EmailLanguage.ENGLISH, description="The language used for the sent email")
+    subject: Optional[Dict[EmailLanguage, str]] = Field(
+        default=None,
         description="Email subject in different languages. Must use lowercase language codes: 'en' for English, 'es' for Spanish",
-        example={
-            EmailLanguage.ENGLISH: "Your Travel Itinerary",
-            EmailLanguage.SPANISH: "Su Itinerario de Viaje"
+        json_schema_extra={
+            "example": {
+                EmailLanguage.ENGLISH: "Your Travel Itinerary",
+                EmailLanguage.SPANISH: "Su Itinerario de Viaje"
+            }
         }
     )
 

@@ -137,21 +137,50 @@ create_travel_document_task:
 
 prepare_travel_email_task:
   description: >
-    Prepare and send a beautifully formatted HTML email with all trip details to {recipient_email}.
-    Convert markdown content to responsive HTML with CSS styling.
-    Translate the content to {locale} language. Add multimedia resources like images and maps to enhance visual appeal.
+    Craft a high-quality, professional, and visually appealing HTML email and send it using the EmailTool.
+    
+    This task involves a multi-step process to guarantee a perfect final product:
+
+    1. Review the `create_travel_document_task` output to extract and verify all travel details (flight, accommodation, activities, etc.).
+    
+    2. Translate all content to {locale} language, ensuring accurate and natural-sounding text for the recipient.
+    
+    3. Find and select high-quality, relevant multimedia, including:
+       - ✈️ A representative image of the destination (e.g., a famous landmark).
+       - 🏨 An image of the specific accommodation or a similar one if not available.
+       - 🗺️ A static map image of the destination, highlighting key points of interest.
+    
+    4. Design and generate a responsive HTML email template with PROPERLY SEPARATED HTML and CSS. Use inline CSS only (no external stylesheets). The template must include sections for:
+       - A summary of the trip.
+       - A detailed breakdown of flight information (price, airline, times).
+       - A detailed breakdown of accommodation (price, dates, details).
+       - A summary of the destination with multimedia.
+    
+    5. CRITICAL: Ensure HTML and CSS are properly formatted:
+       - Use inline CSS with style="" attributes on HTML elements
+       - Do NOT mix HTML tags like <br> with CSS selectors
+       - Keep HTML structure clean and valid
+       - Use proper CSS syntax with semicolons and braces
+    
+    6. Embed all multimedia resources (images and maps) directly into the HTML using base64 encoding or accessible public URLs to ensure they display correctly.
+    
+    7. Use the EmailTool to send the email to {recipient_email} with an appropriate subject line based on the destination and trip type.
+    
+    8. Return a TravelEmailResponse object with the email status and details.
+
   depends_on:
-    - create_travel_document_task  # Need the final travel document to create email
+    - create_travel_document_task 
   required_params:
-    - recipient_email  # Email address must be provided
-    - locale  # Language preference for email content
+    - recipient_email 
+    - locale
   expected_output: >
-    A beautifully formatted, responsive HTML email containing the complete trip details,
-    translated into the specified language. Includes delivery confirmation and status
-    updates to ensure successful communication of all travel information to the recipient.
+    A TravelEmailResponse object containing:
+    - status: The status of the email sending operation (sent, failed, or pending)
+    - message: A detailed message about the email sending result
+    - template: An EmailTemplate object with the HTML content and CSS styles
+    - selected_language: The language used for the email (en or es)
+    - subject: Optional dictionary with email subjects in different languages
   agent: ui_designer
-
-
 
 
 
