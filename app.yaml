@@ -1,0 +1,22 @@
+runtime: python312
+
+entrypoint: gunicorn -c gunicorn.conf.py src.trip_planning.main:app
+
+instance_class: F2
+
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  max_instances: 1
+  target_throughput_utilization: 0.6
+
+env_variables:
+  OPENAI_API_KEY: "projects/bogdev-437223/secrets/OPENAI_API_KEY/versions/latest"
+  SERPER_API_KEY: "projects/bogdev-437223/secrets/SERPER_API_KEY/versions/latest"
+  GMAIL_ADDRESS: "projects/bogdev-437223/secrets/GMAIL_ADDRESS/versions/latest"
+  GMAIL_APP_PASSWORD: "projects/bogdev-437223/secrets/GMAIL_APP_PASSWORD/versions/latest"
+  OPEN_API_MODEL: "gpt-4o-mini"
+  PYTHONPATH: "/workspace"
+
+handlers:
+  - url: /.*
+    script: auto

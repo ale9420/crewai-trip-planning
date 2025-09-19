@@ -16,7 +16,7 @@ Next, navigate to your project directory and install the dependencies:
 
 (Optional) Lock the dependencies and install them by using the CLI command:
 ```bash
-crewai install
+uv sync
 ```
 ### Customizing
 
@@ -34,22 +34,6 @@ To kickstart your crew of AI agents and begin task execution, run this from the 
 ```bash
 $ crewai run
 ```
-
-This command launches a Gradio web interface where you can interact with the trip-planning crew through a chat interface. The interface will open in your default browser.
-
-Alternatively, you can run the project directly with Python:
-
-```bash
-$ python -m src.trip_planning.main
-```
-
-The Gradio interface provides a conversational way to interact with the AI agents, allowing you to:
-- Plan trips through natural conversation
-- Get personalized travel recommendations
-- Receive detailed itineraries and budget analysis
-- Ask follow-up questions and get clarifications
-
-This example creates a comprehensive trip planning assistant that can help you plan your next adventure!
 
 ## Understanding Your Crew
 

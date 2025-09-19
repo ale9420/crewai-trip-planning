@@ -3,9 +3,8 @@ import sys
 import warnings
 from dotenv import load_dotenv
 from datetime import datetime
-from fastapi import FastAPI
-from fastapi.concurrency import run_in_threadpool
-from trip_planning.crew import TripPlanning
+from fastapi import FastAPI, BackgroundTasks
+from .crew import TripPlanning
 from pydantic import BaseModel
 
 # Load environment variables
@@ -31,17 +30,27 @@ class TripRequest(BaseModel):
     locale: str
 
 @app.post("/plan-trip")
-async def plan_trip(trip_request: TripRequest):
+async def plan_trip(trip_request: TripRequest, background_tasks: BackgroundTasks):
     """
     API endpoint to start trip planning crew
     """
     try:
-        inputs = trip_request.model_dump()
         # Run the blocking crew.kickoff in a thread pool
-        result = await run_in_threadpool(TripPlanning().crew().kickoff, inputs=inputs)
-        return {"status": "success", "result": result}
+        # result = await run_in_threadpool(TripPlanning().crew().kickoff, inputs=inputs)
+
+        background_tasks.add_task(run_in_background, trip_request=trip_request)
+        return {
+            "message": "CrewAI task started in the background.",
+            "status": "accepted"
+        }
+        # return {"status": "success", "result": result}
     except Exception as e:
         return {"status": "error", "message": str(e)}
+    
+def run_in_background(trip_request: TripRequest):
+    print("Running in background")
+    inputs = trip_request.model_dump()
+    TripPlanning().crew().kickoff(inputs=inputs)
 
 def main():
     """
@@ -50,7 +59,7 @@ def main():
     """
     import uvicorn
     print("Starting FastAPI server...")
-    uvicorn.run(app, host="0.0.0.0", port=8000, timeout_keep_alive=1200)
+    uvicorn.run(app, host="0.0.0.0", port=8080, timeout_keep_alive=1200)
 
 # This main file is intended to be a way for you to run your
 # crew locally, so refrain from adding unnecessary logic into this file.

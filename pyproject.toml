@@ -13,8 +13,8 @@ dependencies = [
     "yagmail>=0.15.293",
 ]
 
-[tool.setuptools]
-packages = {find = {}}
+[tool.hatch.build.targets.wheel]
+packages = ["src/trip_planning"]
 
 [project.scripts]
 trip_planning = "trip_planning.main:main"

@@ -1,5 +1,5 @@
 # Stage 1: Build stage
-FROM python:3.12-slim as builder
+FROM python:3.12-slim AS builder
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -48,5 +48,8 @@ USER appuser
 # Set Python path
 ENV PYTHONPATH=/app/src
 
+# Expose port 8080
+EXPOSE 8080
+
 # Command to run the application
-CMD ["python", "-m", "trip_planning.main"]
+CMD ["uv", "run", "trip_planning"]

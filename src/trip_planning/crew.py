@@ -1,15 +1,16 @@
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
-from crewai.memory import LongTermMemory, ShortTermMemory, EntityMemory
-from crewai.memory.storage.rag_storage import RAGStorage
-from crewai.memory.storage.ltm_sqlite_storage import LTMSQLiteStorage
 from typing import List
-from crewai_tools import SerperDevTool
-from trip_planning.models.dining import DiningSearchResults
+from .models.dining import DiningSearchResults
 from .models import DestinationInvestigation, FlightSearchResults, AccommodationSearchResults, TransportationSearchResults, AttractionSearchResults, StructuredItinerary, ComprehensiveTravelDocument
 from .tools.email_tool import EmailTool
-from trip_planning.models.email import TravelEmailResponse
+from .models.email import TravelEmailResponse
+# Try to import SerperDevTool, fallback to None if not available
+try:
+    from crewai_tools import SerperDevTool
+except ImportError:
+    SerperDevTool = None
 
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
@@ -150,35 +151,4 @@ class TripPlanning():
             process=Process.sequential,
             verbose=False,
             memory=False,  # Temporarily disabled due to API errors
-            # Long-term memory for persistent storage across sessions
-            # long_term_memory = LongTermMemory(
-            #     storage=LTMSQLiteStorage(
-            #         db_path="./memory/long_term_memory_storage.db"
-            #     )
-            # ),
-            # Short-term memory for current context using RAG
-            # short_term_memory = ShortTermMemory(
-            #     storage = RAGStorage(
-            #             embedder_config={
-            #                 "provider": "openai",
-            #                 "config": {
-            #                     "model": 'text-embedding-3-small'
-            #                 }
-            #             },
-            #             type="short_term",
-            #             path="./memory/"
-            #         )
-            #     ),            # Entity memory for tracking key information about entities
-            # entity_memory = EntityMemory(
-            #     storage=RAGStorage(
-            #         embedder_config={
-            #             "provider": "openai",
-            #             "config": {
-            #                 "model": 'text-embedding-3-small'
-            #             }
-            #         },
-            #         type="short_term",
-            #         path="./memory/"
-            #     )
-            # ),
         )
