@@ -45,7 +45,7 @@ class LocationDetails(BaseModel):
 
 class BookingInformation(BaseModel):
     """Booking and payment details."""
-    total_price: PriceInfo = Field(description="Total price for the entire stay")
+    total_price: Optional[PriceInfo] = Field(description="Total price for the entire stay")
     price_breakdown: Dict[str, PriceInfo] = Field(description="Breakdown of costs (base rate, taxes, fees)")
     cancellation_policy: str = Field(description="Cancellation and refund policies")
     payment_methods: List[str] = Field(description="Accepted payment methods")
@@ -71,8 +71,8 @@ class AccommodationOption(BaseModel):
     location: LocationDetails = Field(description="Detailed location information")
     booking_info: BookingInformation = Field(description="Booking and payment details")
     room_configurations: List[RoomConfiguration] = Field(description="Available room types and configurations")
-    amenities: AccommodationAmenities = Field(description="Comprehensive amenities information")
-    environmental_initiatives: List[str] = Field(description="Environmental sustainability practices")
+    amenities: Optional[AccommodationAmenities] = Field(description="Comprehensive amenities information")
+    environmental_initiatives: Optional[List[str]] = Field(description="Environmental sustainability practices")
     reviews: Review = Field(description="Guest reviews and ratings")
     contact_info: ContactInfo = Field(description="Contact information")
     airport_transfer: Optional[str] = Field(description="Airport transfer options and costs")
