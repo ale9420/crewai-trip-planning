@@ -1,0 +1,54 @@
+name: Deploy to Cloud Run
+
+on:
+  workflow_run:
+    workflows: ["Build and Publish"]
+    types:
+      - completed
+    branches: [ "master" ]
+
+env:
+  REGISTRY: us-central1-docker.pkg.dev
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REPOSITORY: trip-planning
+  IMAGE_NAME: trip-planning
+  REGION: us-central1
+  SERVICE_NAME: trip-planning
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+        service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+    
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+    
+    - name: Deploy to Cloud Run
+      uses: google-github-actions/deploy-cloudrun@v1
+      with:
+        service: ${{ env.SERVICE_NAME }}
+        region: ${{ env.REGION }}
+        image: ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
+        flags: |
+          --port=8080
+          --cpu=1
+          --memory=1Gi
+          --min-instances=0
+          --max-instances=10
+          --set-env-vars=CREWAI_DISABLE_TELEMETRY=1,CREWAI_DISABLE_TRACING=1
+    
+    # Output the service URL
+    - name: Show Service URL
+      run: |
+        echo "Service URL: $(gcloud run services describe ${{ env.SERVICE_NAME }} --region ${{ env.REGION }} --format 'value(status.url)')"
