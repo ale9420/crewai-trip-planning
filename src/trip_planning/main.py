@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import os
 import warnings
 from dotenv import load_dotenv
 from datetime import datetime
@@ -9,6 +10,11 @@ from pydantic import BaseModel
 
 # Load environment variables
 load_dotenv()
+
+# Configure CrewAI for Cloud Run environment
+if os.getenv('K_SERVICE'):  # This env var is present in Cloud Run
+    os.environ['CREWAI_DISABLE_TELEMETRY'] = '1'
+    os.environ['CREWAI_DISABLE_TRACING'] = '1'
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
@@ -51,6 +57,7 @@ def run_in_background(trip_request: TripRequest):
     print("Running in background")
     inputs = trip_request.model_dump()
     TripPlanning().crew().kickoff(inputs=inputs)
+    print("CrewAI task completed.")
 
 def main():
     """

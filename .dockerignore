@@ -1,3 +1,8 @@
+# Version control
+.git/
+.gitignore
+.gitattributes
+
 # Python
 __pycache__/
 *.py[cod]
@@ -18,6 +23,40 @@ var/
 wheels/
 *.egg-info/
 .installed.cfg
+*.manifest
+*.spec
+pip-log.txt
+
+# Virtual environments
+.env
+.venv/
+env/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Test coverage
+.coverage
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+htmlcov/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Local development
+*.log
+.DS_Store
+memory/
+*.sqlite3
 *.egg
 
 # Virtual Environment
