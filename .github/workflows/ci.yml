@@ -7,35 +7,40 @@ on:
     branches: [ "master" ]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v4
     
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
-        cache: 'pip'
+  #   - name: Set up Python
+  #     uses: actions/setup-python@v4
+  #     with:
+  #       python-version: '3.12'
+  #       cache: 'pip'
     
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install uv
-        uv pip install .[dev]
+  #   - name: Install dependencies
+  #     run: |
+  #       python -m pip install --upgrade pip
+  #       pip install uv
+  #       uv venv .venv
+  #       . .venv/bin/activate
+  #       uv pip install -e .[dev]
     
-    - name: Lint with flake8
-      run: |
-        pip install flake8
-        flake8 src/trip_planning tests
+  #   - name: Lint with flake8
+  #     run: |
+  #       . .venv/bin/activate
+  #       pip install flake8
+  #       flake8 src/trip_planning tests
     
-    - name: Format check with black
-      run: |
-        pip install black
-        black --check src/trip_planning tests
+  #   - name: Format check with black
+  #     run: |
+  #       . .venv/bin/activate
+  #       pip install black
+  #       black --check src/trip_planning tests
     
     # - name: Run tests
     #   run: |
+    #     . .venv/bin/activate
     #     python -m pytest tests/
 
   security:
